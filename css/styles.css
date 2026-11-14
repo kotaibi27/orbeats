@@ -101,8 +101,8 @@ input[type=range]{accent-color:#7FC8F8;width:100%;height:44px;cursor:pointer;bac
 
 /* ---------- Play tab: camera panel and Air Tiles ---------- */
 .camera-box{display:flex;flex-wrap:wrap;gap:1.5em;align-items:flex-start;margin-top:2em;padding-top:1.5em;border-top:1px solid var(--line)}
-.camera-box canvas{width:240px;height:180px;border:1px solid var(--line);border-radius:6px;background:var(--panel)}
-.camera-side{flex:1 1 20em;display:flex;flex-direction:column;gap:.8em}
+.camera-box canvas{width:min(100%,40em);height:auto;aspect-ratio:4/3;flex:0 1 40em;border:1px solid var(--line);border-radius:6px;background:var(--panel)}
+.camera-side{flex:1 1 16em;display:flex;flex-direction:column;gap:.8em}
 .game-row{display:flex;flex-wrap:wrap;align-items:center;gap:.8em 1em}
 .game-stage{border-top:1px solid var(--line);padding-top:1.5em;min-width:0}
 .game-stage:focus{outline:none}

@@ -370,7 +370,7 @@ var HandEngine = (function () {
     // Draw each hand as lines and dots
     for (var n = 0; n < hands.length; n++) {
       var p = hands[n];
-      ctx.strokeStyle = '#7FC8F8'; ctx.lineWidth = 2;
+      ctx.strokeStyle = '#7FC8F8'; ctx.lineWidth = Math.max(2, w / 160);   // lines and dots grow with the picture
       for (var b = 0; b < BONES.length; b++) {
         ctx.beginPath();
         ctx.moveTo((1 - p[BONES[b][0]].x) * w, p[BONES[b][0]].y * h);
@@ -379,7 +379,7 @@ var HandEngine = (function () {
       }
       ctx.fillStyle = '#E8EDF5';
       for (var k = 0; k < p.length; k++) {
-        ctx.beginPath(); ctx.arc((1 - p[k].x) * w, p[k].y * h, 2.5, 0, Math.PI * 2); ctx.fill();
+        ctx.beginPath(); ctx.arc((1 - p[k].x) * w, p[k].y * h, Math.max(2.5, w / 110), 0, Math.PI * 2); ctx.fill();
       }
     }
   }
