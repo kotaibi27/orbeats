@@ -4,45 +4,73 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>ORBEATS — Component set</title>
-<link rel="stylesheet" href="css/style.css">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"><link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,300;6..72,400&amp;family=Inter:wght@300;400;500&amp;display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/styles.css">
+<script src="js/app.js" defer></script>
 </head>
-<body data-page="components" data-np-title="[Track title]">
+<body>
 <div class="app" id="app">
-<div id="site-header"></div>
+<a class="skip" href="#main">Skip to content</a>
+<header class="hdr">
+<div class="hdr-row">
+<a class="logo" href="index.html" aria-label="ORBEATS, The Earth Information Jukebox, home"><svg width="34" height="34" viewBox="0 0 34 34" aria-hidden="true"><circle cx="17" cy="17" r="16" fill="none" stroke="#7FC8F8" stroke-width="1"></circle><circle cx="17" cy="17" r="11.5" fill="none" stroke="#7FC8F8" stroke-opacity=".35" stroke-width="1"></circle><circle cx="17" cy="17" r="7" fill="none" stroke="#7FC8F8" stroke-opacity=".35" stroke-width="1"></circle><circle cx="17" cy="17" r="1.6" fill="#E8EDF5"></circle></svg><span><span class="wordmark">ORBEATS</span><span class="tagline">The Earth Information Jukebox</span></span></a>
+<nav aria-label="Main sections"><ul class="tabs"><li><a class="tab" href="index.html">Explore</a></li><li><a class="tab" href="play.html">Play</a></li><li><a class="tab" href="compose.html">Compose</a></li></ul></nav>
+<div class="a11y" role="toolbar" aria-label="Accessibility settings">
+<div class="tool-group"><span class="sr">Text size</span><span aria-hidden="true">Text</span><button class="tool" aria-label="Decrease text size" data-action="text-smaller">A−</button><span id="text-pct" aria-live="polite" style="min-width: 2.8em; text-align: center; color: var(--text)">100%</span><button class="tool" aria-label="Increase text size" data-action="text-bigger">A+</button></div>
+<button class="tool" aria-pressed="false" data-setting="hc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="8.5"></circle><path d="M12 3.5v17a8.5 8.5 0 0 0 0-17z" fill="currentColor"></path></svg><span>Contrast</span><span class="state">Off</span></button>
+<button class="tool" aria-pressed="true" data-setting="audio"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z"></path><path d="M16.5 8.5a5 5 0 0 1 0 7"></path><path d="M19 6a8.5 8.5 0 0 1 0 12"></path></svg><span>Audio</span><span class="state">On</span></button>
+<button class="tool" aria-pressed="true" data-setting="cc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="3"></rect><path d="M10.5 10.2a2.5 2.5 0 1 0 0 3.6M17 10.2a2.5 2.5 0 1 0 0 3.6"></path></svg><span>Captions</span><span class="state">On</span></button>
+</div>
+</div>
+</header>
 <main id="main" tabindex="-1">
 
 <div class="wrap" style="padding-top: 4.5em; display: flex; flex-direction: column; gap: 3.5em">
 <div style="display: flex; flex-direction: column; gap: .9em"><p class="label">Template</p><h1 style="font-size: 3.4em">Component set</h1><p class="muted">Space palette, hairline structure, one accent.</p></div>
-
 <section aria-labelledby="c1" style="border-top: 1px solid var(--line); padding-top: 1.6em"><h2 id="c1" class="label" style="font-family: Inter, sans-serif; margin-bottom: 1.4em">Color</h2>
-<div id="swatches" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(9em, 1fr)); gap: 1.5em"></div></section>
-
+<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(9em, 1fr)); gap: 1.5em"><div style="display: flex; flex-direction: column; gap: .6em"><div style="height: 4.5em; background: #05080F; border: 1px solid var(--line); display: flex; align-items: flex-end; padding: .5em .7em; color: #E8EDF5; font-size: .8em">#05080F</div><p>Space</p><p class="muted" style="font-size: .8em; margin-top: -.5em">Background</p></div><div style="display: flex; flex-direction: column; gap: .6em"><div style="height: 4.5em; background: #0B1220; border: 1px solid var(--line); display: flex; align-items: flex-end; padding: .5em .7em; color: #E8EDF5; font-size: .8em">#0B1220</div><p>Panel</p><p class="muted" style="font-size: .8em; margin-top: -.5em">Surfaces</p></div><div style="display: flex; flex-direction: column; gap: .6em"><div style="height: 4.5em; background: #121B2E; border: 1px solid var(--line); display: flex; align-items: flex-end; padding: .5em .7em; color: #E8EDF5; font-size: .8em">#121B2E</div><p>Panel raised</p><p class="muted" style="font-size: .8em; margin-top: -.5em">Selected states</p></div><div style="display: flex; flex-direction: column; gap: .6em"><div style="height: 4.5em; background: #E8EDF5; border: 1px solid var(--line); display: flex; align-items: flex-end; padding: .5em .7em; color: #05080F; font-size: .8em">#E8EDF5</div><p>Starlight</p><p class="muted" style="font-size: .8em; margin-top: -.5em">Text</p></div><div style="display: flex; flex-direction: column; gap: .6em"><div style="height: 4.5em; background: #9AA6BA; border: 1px solid var(--line); display: flex; align-items: flex-end; padding: .5em .7em; color: #05080F; font-size: .8em">#9AA6BA</div><p>Slate</p><p class="muted" style="font-size: .8em; margin-top: -.5em">Secondary text</p></div><div style="display: flex; flex-direction: column; gap: .6em"><div style="height: 4.5em; background: #7FC8F8; border: 1px solid var(--line); display: flex; align-items: flex-end; padding: .5em .7em; color: #05080F; font-size: .8em">#7FC8F8</div><p>Ice blue</p><p class="muted" style="font-size: .8em; margin-top: -.5em">Active, focus, highlights</p></div><div style="display: flex; flex-direction: column; gap: .6em"><div style="height: 4.5em; background: #E0A458; border: 1px solid var(--line); display: flex; align-items: flex-end; padding: .5em .7em; color: #05080F; font-size: .8em">#E0A458</div><p>Solar amber</p><p class="muted" style="font-size: .8em; margin-top: -.5em">Sparing secondary</p></div></div></section>
 <section aria-labelledby="c2" style="border-top: 1px solid var(--line); padding-top: 1.6em"><h2 id="c2" class="label" style="font-family: Inter, sans-serif; margin-bottom: 1.4em">Type</h2>
 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(18em, 1fr)); gap: 2.5em">
 <div><p class="muted" style="font-size: .8em">Headings · Newsreader Light</p><p class="serif" style="font-size: 3.2em">Listen to a changing planet.</p></div>
 <div><p class="muted" style="font-size: .8em">Body and UI · Inter Regular</p><p style="font-size: 1.1em">Body text at 17 px with 1.65 line height. Scales to 21 and 26 px on kiosk displays, and up to 160% with the text-size control.</p><p class="label" style="margin-top: 1em">Uppercase label · wide tracking</p></div>
 </div></section>
-
 <section aria-labelledby="c3" style="border-top: 1px solid var(--line); padding-top: 1.6em"><h2 id="c3" class="label" style="font-family: Inter, sans-serif; margin-bottom: 1.4em">Controls</h2>
 <div style="display: flex; flex-wrap: wrap; gap: 1.2em 1.5em; align-items: center">
 <button class="btn btn-primary">Primary<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></button>
 <button class="btn">Secondary</button>
 <button class="btn btn-icon btn-primary" aria-label="Play"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4.5v15l12.5-7.5z"></path></svg></button>
-<button class="switch" id="demo-switch" role="switch" aria-checked="true"><span class="track" aria-hidden="true"></span><span class="state" id="demo-state">On</span><span>Switch</span></button>
+<button class="switch" role="switch" aria-checked="true"><span class="track" aria-hidden="true"></span><span class="state">On</span><span>Switch</span></button>
 <button class="tool" aria-pressed="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="3"></rect><path d="M10.5 10.2a2.5 2.5 0 1 0 0 3.6M17 10.2a2.5 2.5 0 1 0 0 3.6"></path></svg><span>Toolbar toggle</span><span class="state">On</span></button>
 <a class="tab" href="#" aria-current="page">Active tab</a><a class="tab" href="#">Tab</a>
 </div>
 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(16em, 1fr)); gap: 2em; margin-top: 2em; align-items: center">
-<div><label for="cs" style="display: flex; justify-content: space-between"><span>Slider</span><span class="muted" id="cs-val">60</span></label><input id="cs" type="range" min="0" max="100" value="60"></div>
+<div><label for="cs" style="display: flex; justify-content: space-between"><span>Slider</span><span id="cs-out" class="muted">60</span></label><input id="cs" type="range" min="0" max="100" value="60" data-output="cs-out"></div>
 <div><p class="muted" style="font-size: .8em; margin-bottom: .5em">Level meter (now-playing bar only)</p><div class="meter" aria-hidden="true"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></div>
 <div class="zone" style="min-height: 6em">[Placeholder region]</div>
 </div></section>
 </div>
 
 </main>
-<div id="site-footer"></div>
+<footer class="ftr">
+<div class="ftr-row">
+<p>Data and visualizations: <a href="#">NASA Scientific Visualization Studio</a> [link placeholder]</p>
+<nav aria-label="Footer"><ul><li><a href="#">About</a></li><li><a href="#">Accessibility</a></li><li><a href="#">Data catalog</a></li><li><a href="#">Contact</a></li></ul></nav>
 </div>
-<script src="js/shared.js"></script>
-<script src="js/components.js"></script>
+</footer>
+<section class="np" aria-label="Now playing">
+<div class="np-row">
+<button class="btn btn-primary btn-icon" aria-label="Pause" id="np-play"><span class="ic-pause"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="6" y="4.5" width="4.5" height="15" rx="1"></rect><rect x="13.5" y="4.5" width="4.5" height="15" rx="1"></rect></svg></span><span class="ic-play" hidden><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4.5v15l12.5-7.5z"></path></svg></span></button>
+<div style="min-width: 14em; max-width: 26em">
+<p class="label" style="font-size: .68em">Now playing</p>
+<p class="np-title">[Track title]</p>
+</div>
+<p id="np-cap" class="np-cap" aria-live="polite">Caption · <span>[What this sound represents placeholder]</span></p>
+<p id="np-audio-off" class="np-cap" hidden>Audio is off. Captions only.</p>
+<div class="vol"><label for="np-vol" class="sr">Volume</label><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z"></path><path d="M16.5 8.5a5 5 0 0 1 0 7"></path><path d="M19 6a8.5 8.5 0 0 1 0 12"></path></svg><input id="np-vol" type="range" min="0" max="100" value="70"></div>
+<div><span class="sr">Output level: [level placeholder]</span><div class="meter" aria-hidden="true"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></div>
+</div>
+</section>
+</div>
+
 </body>
 </html>

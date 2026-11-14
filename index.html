@@ -3,60 +3,102 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>ORBEATS — Home</title>
-<link rel="stylesheet" href="css/style.css">
+<title>ORBEATS — Explore</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"><link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,300;6..72,400&amp;family=Inter:wght@300;400;500&amp;display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/styles.css">
+<link rel="stylesheet" href="css/home.css">
+<script src="js/app.js" defer></script>
+<script src="js/home.js" defer></script>
+<script src="js/explore.js" defer></script>
 </head>
-<body data-page="explore" data-np-title="Data Sonification: Caldwell 73" data-np-caption="Stars become notes. Farther from the center, higher pitch.">
+<body class="home">
 <div class="app" id="app">
-<div id="site-header"></div>
+<a class="skip" href="#main">Skip to content</a>
+<header class="hdr">
+<div class="hdr-row">
+<a class="logo" href="index.html" aria-label="ORBEATS, The Earth Information Jukebox, home"><svg width="34" height="34" viewBox="0 0 34 34" aria-hidden="true"><circle cx="17" cy="17" r="16" fill="none" stroke="#7FC8F8" stroke-width="1"></circle><circle cx="17" cy="17" r="11.5" fill="none" stroke="#7FC8F8" stroke-opacity=".35" stroke-width="1"></circle><circle cx="17" cy="17" r="7" fill="none" stroke="#7FC8F8" stroke-opacity=".35" stroke-width="1"></circle><circle cx="17" cy="17" r="1.6" fill="#E8EDF5"></circle></svg><span><span class="wordmark">ORBEATS</span><span class="tagline">The Earth Information Jukebox</span></span></a>
+<nav aria-label="Main sections"><ul class="tabs"><li><a class="tab" href="index.html" aria-current="page">Explore</a></li><li><a class="tab" href="play.html">Play</a></li><li><a class="tab" href="compose.html">Compose</a></li></ul></nav>
+<div class="a11y" role="toolbar" aria-label="Accessibility settings">
+<div class="tool-group"><span class="sr">Text size</span><span aria-hidden="true">Text</span><button class="tool" aria-label="Decrease text size" data-action="text-smaller">A−</button><span id="text-pct" aria-live="polite" style="min-width: 2.8em; text-align: center; color: var(--text)">100%</span><button class="tool" aria-label="Increase text size" data-action="text-bigger">A+</button></div>
+<button class="tool" aria-pressed="false" data-setting="hc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="8.5"></circle><path d="M12 3.5v17a8.5 8.5 0 0 0 0-17z" fill="currentColor"></path></svg><span>Contrast</span><span class="state">Off</span></button>
+<button class="tool" aria-pressed="true" data-setting="audio"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z"></path><path d="M16.5 8.5a5 5 0 0 1 0 7"></path><path d="M19 6a8.5 8.5 0 0 1 0 12"></path></svg><span>Audio</span><span class="state">On</span></button>
+<button class="tool" aria-pressed="true" data-setting="cc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="3"></rect><path d="M10.5 10.2a2.5 2.5 0 1 0 0 3.6M17 10.2a2.5 2.5 0 1 0 0 3.6"></path></svg><span>Captions</span><span class="state">On</span></button>
+</div>
+</div>
+</header>
 <main id="main" tabindex="-1">
-
-<section class="vhero" aria-labelledby="hero-h">
-<canvas id="orbit-canvas" aria-hidden="true"></canvas>
-<video id="bg-video" autoplay muted loop playsinline preload="auto" aria-hidden="true">
-<source src="media/caldwell73.webm" type="video/webm">
+<!-- HERO. Layers, bottom to top: navy > animated star picture (canvas) > video (fades in when it plays) > bottom fade > text -->
+<!-- Moving star picture: fixed behind the WHOLE Explore page (hero and every section below) -->
+<canvas id="hero-canvas" class="space-canvas" aria-hidden="true"></canvas>
+<section class="hero" aria-labelledby="hero-h">
+<div class="hero-media" aria-hidden="true">
+<video id="bg-video" class="hero-video" autoplay muted loop playsinline preload="auto">
+<!-- Original NASA file, unchanged: highest quality MP4 (1920x1920) first; the lighter WebM of the same video for phones -->
+<source src="https://svs.gsfc.nasa.gov/vis/a010000/a013700/a013786/Caldwell73_2K_Final.mp4" type="video/mp4">
 <source src="https://svs.gsfc.nasa.gov/vis/a010000/a013700/a013786/Caldwell73_2K_Final.webm" type="video/webm">
 </video>
-<div class="vhero-shade"></div>
-<div class="wrap vhero-body">
-<h1 id="hero-h" class="hero-mark">ORBEATS</h1>
-<p style="font-size: 1.2em; max-width: 24em">The Earth Information Jukebox. NASA data, turned into sound anyone can hear.</p>
-<div style="display: flex; flex-wrap: wrap; align-items: center; gap: .8em 1.4em; margin-top: 1.4em">
-<button class="btn btn-primary" id="music-btn" aria-pressed="false" style="min-height: 56px; padding: 0 1.8em"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4z"></path><path d="M15.5 8.5a5 5 0 0 1 0 7"></path></svg><span id="music-label">Tap to hear the music</span></button>
-<a class="btn" href="play.html" style="min-height: 56px; padding: 0 1.6em; background: rgba(5,8,15,.55)">Play a game</a>
-<a href="audio-first.html" style="display: inline-flex; align-items: center; min-height: 48px">Audio-first mode</a>
+<script>
+// Phones: use the lighter WebM of the same video to save data
+(function () {
+  var v = document.getElementById('bg-video');
+  if (window.matchMedia && window.matchMedia('(max-width: 720px)').matches) {
+    v.insertBefore(v.querySelector('source[type="video/webm"]'), v.firstElementChild);
+    v.load();
+  }
+})();
+</script>
+<div class="hero-shade"></div>
 </div>
-<p id="music-msg" class="muted" role="status" style="font-size: .9em; margin-top: .8em" hidden>Sound is blocked. Tap the button again to turn it on.</p>
-<p class="vhero-cap">Each star in this Hubble image becomes a note. Stars farther from the center sound higher. <span class="vhero-credit">Video and sonification: NASA Scientific Visualization Studio · <a href="https://svs.gsfc.nasa.gov/13786/" target="_blank" rel="noopener">SVS 13786<span class="sr"> (opens in a new tab)</span></a></span></p>
+<p class="video-note" role="status">The NASA video could not load here, so an animated preview is showing. Open the site in a normal browser window to see the Caldwell 73 video.</p>
+
+<div class="hero-text">
+<div class="wrap">
+<h1 id="hero-h" class="hero-mark"><span class="beat word">ORBEATS</span><span class="beat beat-line" aria-hidden="true"></span></h1>
+<p class="hero-sub">[One-line subtitle placeholder]</p>
+<div class="hero-actions">
+<button id="sound-btn" class="btn btn-primary sound-btn"><span class="ic-speaker"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z"></path><path d="M16.5 8.5a5 5 0 0 1 0 7"></path><path d="M19 6a8.5 8.5 0 0 1 0 12"></path></svg></span><span class="ic-mute" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z"></path><path d="M17 9l5 6M22 9l-5 6"></path></svg></span><span class="sound-label">Tap to hear the music</span></button>
+<a class="btn glass-btn" href="#catalog">Explore the data<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M6 13l6 6 6-6"></path></svg></a>
+<a class="btn glass-btn" href="play.html">Play a game<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></a>
+<a class="btn glass-btn" href="audio-first.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 15v-3a8 8 0 0 1 16 0v3"></path><rect x="3" y="14" width="5" height="7" rx="2"></rect><rect x="16" y="14" width="5" height="7" rx="2"></rect></svg>Audio-first mode</a>
+</div>
+<p id="sound-blocked" class="sound-blocked" role="status" hidden>Sound is blocked. Tap the button again to turn it on.</p>
+<p id="sound-cap" class="sound-cap" aria-live="polite">Each star in this Hubble image becomes a note. Stars farther from the center sound higher.</p>
+<p class="hero-credit">Video and sonification: <a href="https://svs.gsfc.nasa.gov/13786/">NASA Scientific Visualization Studio, SVS 13786</a>.</p>
+</div>
 </div>
 </section>
 
-<section class="wrap" style="padding-top: 5em" aria-labelledby="impact-h">
-<div style="display: flex; flex-direction: column; gap: .8em; max-width: 40em; margin-bottom: 2.5em">
+<section class="wrap section" aria-labelledby="who-h">
 <p class="label">Who it is for</p>
-<h2 id="impact-h" style="font-size: 2.4em">Science data should not need eyes.</h2>
-<p class="muted" style="font-size: 1.05em">NASA's Earth data is mostly shown as pictures. Turning it into sound opens it to people who cannot see the picture, and it makes every visitor listen more closely.</p>
-</div>
-<div class="impact">
-<div><p class="stat" data-count="2.2" data-suffix=" billion">2.2 billion</p><p>people live with a vision impairment, near or distance.</p><p class="src"><a href="https://www.who.int/news-room/fact-sheets/detail/blindness-and-visual-impairment" target="_blank" rel="noopener">WHO<span class="sr"> (opens in a new tab)</span></a></p></div>
-<div><p class="stat" data-count="1.3" data-suffix=" billion">1.3 billion</p><p>people, about 1 in 6, live with a significant disability.</p><p class="src"><a href="https://www.who.int/news-room/fact-sheets/detail/disability-and-health" target="_blank" rel="noopener">WHO<span class="sr"> (opens in a new tab)</span></a></p></div>
-<div><p class="stat" data-count="9" data-suffix="">9</p><p>real NASA visualizations are already in the catalog below, from night lights to lightning.</p><p class="src"><a href="https://svs.gsfc.nasa.gov/" target="_blank" rel="noopener">NASA SVS<span class="sr"> (opens in a new tab)</span></a></p></div>
-</div>
+<h2 id="who-h" class="section-h">Science data should not need eyes.</h2>
+<p class="lead">NASA's Earth data is mostly shown as pictures. Turning it into sound opens it to people who cannot see the picture, and it makes every visitor listen more closely.</p>
+<div class="stats"><div class="stat">
+<p class="stat-num"><span class="count" data-target="2.2" data-decimals="1" aria-hidden="true">0</span><span class="stat-suffix" aria-hidden="true"> billion</span><span class="sr">2.2 billion</span></p>
+<p class="stat-line">people live with a vision impairment, near or distance.</p>
+<p class="stat-src"> <a href="https://www.who.int/news-room/fact-sheets/detail/blindness-and-visual-impairment" target="_blank" rel="noopener">Source: WHO<span class="sr"> (opens in a new tab)</span></a></p>
+</div><div class="stat">
+<p class="stat-num"><span class="count" data-target="1.3" data-decimals="1" aria-hidden="true">0</span><span class="stat-suffix" aria-hidden="true"> billion</span><span class="sr">1.3 billion</span></p>
+<p class="stat-line">people, about 1 in 6, live with a significant disability.</p>
+<p class="stat-src"> <a href="https://www.who.int/news-room/fact-sheets/detail/disability-and-health" target="_blank" rel="noopener">Source: WHO<span class="sr"> (opens in a new tab)</span></a></p>
+</div><div class="stat">
+<p class="stat-num"><span class="count" data-target="9" data-decimals="0" aria-hidden="true">0</span><span class="stat-suffix" aria-hidden="true"></span><span class="sr">9</span></p>
+<p class="stat-line">real NASA visualizations are already in the catalog below.</p>
+<p class="stat-src"> <a href="#catalog">See the catalog</a></p>
+</div></div>
 </section>
 
-<section class="wrap" style="padding-top: 5em" aria-labelledby="win-h">
-<h2 id="win-h" class="label" style="font-family: Inter, sans-serif; margin-bottom: 1.6em">Why it works</h2>
+<section class="wrap section" aria-labelledby="why-h">
+<p class="label">Why it works</p>
+<h2 id="why-h" class="sr">Why it works</h2>
 <div class="why">
-<div><p class="serif" style="font-size: 1.5em">Everyone can use it</p><p class="muted">An audio-first mode with keyboard control, captions, large text and high contrast.</p></div>
-<div><p class="serif" style="font-size: 1.5em">Real NASA data</p><p class="muted">Every sound comes from a NASA Scientific Visualization Studio dataset.</p></div>
-<div><p class="serif" style="font-size: 1.5em">Learn by playing</p><p class="muted">Games and a composer teach people to hear patterns in Earth's data.</p></div>
-<div><p class="serif" style="font-size: 1.5em">Ready for a museum</p><p class="muted">Works on a kiosk with touch, keyboard or hands-free camera control.</p></div>
+<div><h3>Everyone can use it</h3><p class="muted">Audio-first mode with keyboard control, captions, large text and high contrast.</p></div>
+<div><h3>Real NASA data</h3><p class="muted">Every sound comes from a NASA Scientific Visualization Studio dataset.</p></div>
+<div><h3>Learn by playing</h3><p class="muted">Games and a composer teach people to hear patterns in Earth's data.</p></div>
+<div><h3>Ready for a museum</h3><p class="muted">Works on a kiosk with touch, keyboard or hands-free camera control.</p></div>
 </div>
 </section>
 
-
-
-<section class="wrap" style="padding-top: 5em" aria-labelledby="af-h">
+<section class="wrap section" aria-labelledby="af-h">
 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(20em, 1fr)); gap: 3em; border-top: 1px solid var(--line); padding-top: 2.5em">
 <div style="display: flex; flex-direction: column; gap: 1em; align-items: flex-start">
 <p class="label">For blind and low-vision visitors</p>
@@ -73,19 +115,98 @@
 </div>
 </section>
 
-<section class="wrap" style="padding-top: 5em" aria-labelledby="cat-h" id="catalog">
-<div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 1em; margin-bottom: 1.2em">
+<section id="catalog" class="wrap section" aria-labelledby="cat-h">
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 1em">
 <h2 id="cat-h" style="font-size: 2.2em">Data catalog</h2>
 <p class="muted" style="font-size: .9em">From the NASA Scientific Visualization Studio</p>
 </div>
-<!-- The list is built from the CATALOG array in js/shared.js -->
-<ul id="catalog-list" style="list-style: none; margin: 0; padding: 0; border-bottom: 1px solid var(--line)"></ul>
-</section>
-
-</main>
-<div id="site-footer"></div>
+<p class="lead" style="margin-top: .6em; margin-bottom: 2em">Choose a dataset to explore it: see it, hear it, and read what it means.</p>
+<div class="explorer">
+<ul class="cat-list" aria-label="Datasets">
+<li class="cat-row">
+<svg class="wave" viewBox="0 0 116 48" aria-hidden="true" fill="#7FC8F8"><rect x="2" y="13.2" width="2" height="21.6" rx="1"></rect><rect x="6" y="13.2" width="2" height="21.6" rx="1"></rect><rect x="10" y="14.7" width="2" height="18.6" rx="1"></rect><rect x="14" y="16.5" width="2" height="15.1" rx="1"></rect><rect x="18" y="15.8" width="2" height="16.5" rx="1"></rect><rect x="22" y="16.9" width="2" height="14.3" rx="1"></rect><rect x="26" y="12.8" width="2" height="22.3" rx="1"></rect><rect x="30" y="8.4" width="2" height="31.2" rx="1"></rect><rect x="34" y="4.9" width="2" height="38.2" rx="1"></rect><rect x="38" y="12.1" width="2" height="23.8" rx="1"></rect><rect x="42" y="12.4" width="2" height="23.1" rx="1"></rect><rect x="46" y="14.6" width="2" height="18.8" rx="1"></rect><rect x="50" y="15.7" width="2" height="16.6" rx="1"></rect><rect x="54" y="18.1" width="2" height="11.9" rx="1"></rect><rect x="58" y="17.1" width="2" height="13.7" rx="1"></rect><rect x="62" y="15.6" width="2" height="16.8" rx="1"></rect><rect x="66" y="14.6" width="2" height="18.7" rx="1"></rect><rect x="70" y="18.7" width="2" height="10.6" rx="1"></rect><rect x="74" y="8.6" width="2" height="30.9" rx="1"></rect><rect x="78" y="13.1" width="2" height="21.7" rx="1"></rect><rect x="82" y="7.3" width="2" height="33.3" rx="1"></rect><rect x="86" y="15.1" width="2" height="17.8" rx="1"></rect><rect x="90" y="15.2" width="2" height="17.6" rx="1"></rect><rect x="94" y="13.1" width="2" height="21.9" rx="1"></rect><rect x="98" y="8.3" width="2" height="31.3" rx="1"></rect><rect x="102" y="10.0" width="2" height="28.0" rx="1"></rect><rect x="106" y="13.3" width="2" height="21.4" rx="1"></rect><rect x="110" y="14.3" width="2" height="19.5" rx="1"></rect></svg>
+<div style="min-width: 0"><p class="serif cat-title">Change in Night Lights between 2012 and 2023</p><p class="muted" style="font-size: .85em">SVS 5313 · NASA Black Marble · Suomi NPP VIIRS</p></div>
+<div style="display: flex; align-items: center; gap: 1em"><button class="btn btn-icon cat-play" data-svs="5313" aria-pressed="false" aria-label="Explore and play Change in Night Lights between 2012 and 2023"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4.5v15l12.5-7.5z"></path></svg></button></div>
+</li><li class="cat-row">
+<svg class="wave" viewBox="0 0 116 48" aria-hidden="true" fill="#7FC8F8"><rect x="2" y="10.1" width="2" height="27.8" rx="1"></rect><rect x="6" y="17.3" width="2" height="13.3" rx="1"></rect><rect x="10" y="16.1" width="2" height="15.7" rx="1"></rect><rect x="14" y="10.8" width="2" height="26.4" rx="1"></rect><rect x="18" y="14.9" width="2" height="18.3" rx="1"></rect><rect x="22" y="15.0" width="2" height="17.9" rx="1"></rect><rect x="26" y="13.1" width="2" height="21.8" rx="1"></rect><rect x="30" y="10.9" width="2" height="26.2" rx="1"></rect><rect x="34" y="11.4" width="2" height="25.2" rx="1"></rect><rect x="38" y="13.3" width="2" height="21.4" rx="1"></rect><rect x="42" y="17.9" width="2" height="12.2" rx="1"></rect><rect x="46" y="13.2" width="2" height="21.7" rx="1"></rect><rect x="50" y="15.3" width="2" height="17.5" rx="1"></rect><rect x="54" y="16.0" width="2" height="16.1" rx="1"></rect><rect x="58" y="12.0" width="2" height="24.0" rx="1"></rect><rect x="62" y="11.9" width="2" height="24.2" rx="1"></rect><rect x="66" y="12.6" width="2" height="22.8" rx="1"></rect><rect x="70" y="14.8" width="2" height="18.5" rx="1"></rect><rect x="74" y="15.6" width="2" height="16.8" rx="1"></rect><rect x="78" y="12.6" width="2" height="22.7" rx="1"></rect><rect x="82" y="11.1" width="2" height="25.9" rx="1"></rect><rect x="86" y="11.8" width="2" height="24.3" rx="1"></rect><rect x="90" y="16.0" width="2" height="15.9" rx="1"></rect><rect x="94" y="9.7" width="2" height="28.6" rx="1"></rect><rect x="98" y="11.2" width="2" height="25.5" rx="1"></rect><rect x="102" y="16.2" width="2" height="15.6" rx="1"></rect><rect x="106" y="2.3" width="2" height="43.4" rx="1"></rect><rect x="110" y="9.4" width="2" height="29.1" rx="1"></rect></svg>
+<div style="min-width: 0"><p class="serif cat-title">Global Sea Surface Currents and Temperature</p><p class="muted" style="font-size: .85em">SVS 3912 · ECCO2 model · March 2007 to March 2008</p></div>
+<div style="display: flex; align-items: center; gap: 1em"><button class="btn btn-icon cat-play" data-svs="3912" aria-pressed="false" aria-label="Explore and play Global Sea Surface Currents and Temperature"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4.5v15l12.5-7.5z"></path></svg></button></div>
+</li><li class="cat-row">
+<svg class="wave" viewBox="0 0 116 48" aria-hidden="true" fill="#7FC8F8"><rect x="2" y="14.2" width="2" height="19.7" rx="1"></rect><rect x="6" y="16.7" width="2" height="14.6" rx="1"></rect><rect x="10" y="13.5" width="2" height="21.1" rx="1"></rect><rect x="14" y="5.7" width="2" height="36.6" rx="1"></rect><rect x="18" y="15.9" width="2" height="16.2" rx="1"></rect><rect x="22" y="8.2" width="2" height="31.6" rx="1"></rect><rect x="26" y="18.0" width="2" height="12.0" rx="1"></rect><rect x="30" y="18.4" width="2" height="11.2" rx="1"></rect><rect x="34" y="15.5" width="2" height="17.0" rx="1"></rect><rect x="38" y="16.6" width="2" height="14.8" rx="1"></rect><rect x="42" y="18.8" width="2" height="10.5" rx="1"></rect><rect x="46" y="14.7" width="2" height="18.7" rx="1"></rect><rect x="50" y="13.4" width="2" height="21.3" rx="1"></rect><rect x="54" y="10.3" width="2" height="27.4" rx="1"></rect><rect x="58" y="13.2" width="2" height="21.7" rx="1"></rect><rect x="62" y="12.5" width="2" height="22.9" rx="1"></rect><rect x="66" y="17.7" width="2" height="12.6" rx="1"></rect><rect x="70" y="16.0" width="2" height="16.1" rx="1"></rect><rect x="74" y="13.5" width="2" height="20.9" rx="1"></rect><rect x="78" y="17.0" width="2" height="13.9" rx="1"></rect><rect x="82" y="15.1" width="2" height="17.8" rx="1"></rect><rect x="86" y="14.6" width="2" height="18.8" rx="1"></rect><rect x="90" y="15.0" width="2" height="18.0" rx="1"></rect><rect x="94" y="10.6" width="2" height="26.9" rx="1"></rect><rect x="98" y="13.7" width="2" height="20.7" rx="1"></rect><rect x="102" y="12.0" width="2" height="24.0" rx="1"></rect><rect x="106" y="17.4" width="2" height="13.1" rx="1"></rect><rect x="110" y="20.4" width="2" height="7.2" rx="1"></rect></svg>
+<div style="min-width: 0"><p class="serif cat-title">Perpetual Ocean 2: Western Boundary Currents</p><p class="muted" style="font-size: .85em">SVS 5425 · ECCO-2 · 2021 to 2023</p></div>
+<div style="display: flex; align-items: center; gap: 1em"><button class="btn btn-icon cat-play" data-svs="5425" aria-pressed="false" aria-label="Explore and play Perpetual Ocean 2: Western Boundary Currents"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4.5v15l12.5-7.5z"></path></svg></button></div>
+</li><li class="cat-row">
+<svg class="wave" viewBox="0 0 116 48" aria-hidden="true" fill="#7FC8F8"><rect x="2" y="11.0" width="2" height="26.0" rx="1"></rect><rect x="6" y="13.2" width="2" height="21.6" rx="1"></rect><rect x="10" y="13.2" width="2" height="21.6" rx="1"></rect><rect x="14" y="11.3" width="2" height="25.4" rx="1"></rect><rect x="18" y="10.6" width="2" height="26.7" rx="1"></rect><rect x="22" y="16.7" width="2" height="14.6" rx="1"></rect><rect x="26" y="19.2" width="2" height="9.5" rx="1"></rect><rect x="30" y="17.1" width="2" height="13.9" rx="1"></rect><rect x="34" y="12.7" width="2" height="22.5" rx="1"></rect><rect x="38" y="11.0" width="2" height="26.1" rx="1"></rect><rect x="42" y="18.1" width="2" height="11.7" rx="1"></rect><rect x="46" y="8.9" width="2" height="30.1" rx="1"></rect><rect x="50" y="17.6" width="2" height="12.8" rx="1"></rect><rect x="54" y="12.0" width="2" height="24.1" rx="1"></rect><rect x="58" y="14.5" width="2" height="19.0" rx="1"></rect><rect x="62" y="12.8" width="2" height="22.4" rx="1"></rect><rect x="66" y="10.5" width="2" height="27.0" rx="1"></rect><rect x="70" y="18.7" width="2" height="10.6" rx="1"></rect><rect x="74" y="14.7" width="2" height="18.7" rx="1"></rect><rect x="78" y="18.2" width="2" height="11.6" rx="1"></rect><rect x="82" y="12.8" width="2" height="22.4" rx="1"></rect><rect x="86" y="17.6" width="2" height="12.8" rx="1"></rect><rect x="90" y="16.5" width="2" height="15.1" rx="1"></rect><rect x="94" y="12.9" width="2" height="22.2" rx="1"></rect><rect x="98" y="14.7" width="2" height="18.6" rx="1"></rect><rect x="102" y="17.3" width="2" height="13.5" rx="1"></rect><rect x="106" y="16.3" width="2" height="15.5" rx="1"></rect><rect x="110" y="14.4" width="2" height="19.2" rx="1"></rect></svg>
+<div style="min-width: 0"><p class="serif cat-title">GEDI Forest Height</p><p class="muted" style="font-size: .85em">SVS 4950 · GEDI lidar on the ISS</p></div>
+<div style="display: flex; align-items: center; gap: 1em"><button class="btn btn-icon cat-play" data-svs="4950" aria-pressed="false" aria-label="Explore and play GEDI Forest Height"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4.5v15l12.5-7.5z"></path></svg></button></div>
+</li><li class="cat-row">
+<svg class="wave" viewBox="0 0 116 48" aria-hidden="true" fill="#7FC8F8"><rect x="2" y="15.4" width="2" height="17.3" rx="1"></rect><rect x="6" y="13.7" width="2" height="20.6" rx="1"></rect><rect x="10" y="14.6" width="2" height="18.9" rx="1"></rect><rect x="14" y="12.0" width="2" height="24.0" rx="1"></rect><rect x="18" y="16.1" width="2" height="15.8" rx="1"></rect><rect x="22" y="16.8" width="2" height="14.4" rx="1"></rect><rect x="26" y="11.3" width="2" height="25.4" rx="1"></rect><rect x="30" y="13.7" width="2" height="20.7" rx="1"></rect><rect x="34" y="15.0" width="2" height="18.1" rx="1"></rect><rect x="38" y="19.6" width="2" height="8.8" rx="1"></rect><rect x="42" y="11.6" width="2" height="24.8" rx="1"></rect><rect x="46" y="16.0" width="2" height="16.0" rx="1"></rect><rect x="50" y="13.2" width="2" height="21.6" rx="1"></rect><rect x="54" y="10.3" width="2" height="27.3" rx="1"></rect><rect x="58" y="15.8" width="2" height="16.5" rx="1"></rect><rect x="62" y="13.2" width="2" height="21.5" rx="1"></rect><rect x="66" y="17.9" width="2" height="12.1" rx="1"></rect><rect x="70" y="17.9" width="2" height="12.2" rx="1"></rect><rect x="74" y="10.3" width="2" height="27.4" rx="1"></rect><rect x="78" y="14.1" width="2" height="19.8" rx="1"></rect><rect x="82" y="16.3" width="2" height="15.4" rx="1"></rect><rect x="86" y="17.5" width="2" height="13.0" rx="1"></rect><rect x="90" y="16.6" width="2" height="14.7" rx="1"></rect><rect x="94" y="15.0" width="2" height="18.0" rx="1"></rect><rect x="98" y="15.5" width="2" height="16.9" rx="1"></rect><rect x="102" y="16.2" width="2" height="15.6" rx="1"></rect><rect x="106" y="18.3" width="2" height="11.4" rx="1"></rect><rect x="110" y="17.3" width="2" height="13.5" rx="1"></rect></svg>
+<div style="min-width: 0"><p class="serif cat-title">Lightning Events Detected from the ISS, 2017 to 2023</p><p class="muted" style="font-size: .85em">SVS 5011 · Lightning Imaging Sensor</p></div>
+<div style="display: flex; align-items: center; gap: 1em"><button class="btn btn-icon cat-play" data-svs="5011" aria-pressed="false" aria-label="Explore and play Lightning Events Detected from the ISS, 2017 to 2023"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4.5v15l12.5-7.5z"></path></svg></button></div>
+</li><li class="cat-row">
+<svg class="wave" viewBox="0 0 116 48" aria-hidden="true" fill="#7FC8F8"><rect x="2" y="18.6" width="2" height="10.9" rx="1"></rect><rect x="6" y="16.3" width="2" height="15.4" rx="1"></rect><rect x="10" y="14.8" width="2" height="18.4" rx="1"></rect><rect x="14" y="8.3" width="2" height="31.5" rx="1"></rect><rect x="18" y="7.8" width="2" height="32.5" rx="1"></rect><rect x="22" y="16.0" width="2" height="16.0" rx="1"></rect><rect x="26" y="15.1" width="2" height="17.8" rx="1"></rect><rect x="30" y="19.6" width="2" height="8.7" rx="1"></rect><rect x="34" y="12.6" width="2" height="22.8" rx="1"></rect><rect x="38" y="19.6" width="2" height="8.8" rx="1"></rect><rect x="42" y="13.7" width="2" height="20.7" rx="1"></rect><rect x="46" y="12.7" width="2" height="22.7" rx="1"></rect><rect x="50" y="15.0" width="2" height="17.9" rx="1"></rect><rect x="54" y="12.7" width="2" height="22.6" rx="1"></rect><rect x="58" y="11.9" width="2" height="24.1" rx="1"></rect><rect x="62" y="16.3" width="2" height="15.4" rx="1"></rect><rect x="66" y="15.3" width="2" height="17.4" rx="1"></rect><rect x="70" y="13.1" width="2" height="21.9" rx="1"></rect><rect x="74" y="9.4" width="2" height="29.2" rx="1"></rect><rect x="78" y="15.2" width="2" height="17.5" rx="1"></rect><rect x="82" y="14.0" width="2" height="20.0" rx="1"></rect><rect x="86" y="9.2" width="2" height="29.5" rx="1"></rect><rect x="90" y="10.4" width="2" height="27.1" rx="1"></rect><rect x="94" y="18.9" width="2" height="10.2" rx="1"></rect><rect x="98" y="15.5" width="2" height="17.1" rx="1"></rect><rect x="102" y="16.1" width="2" height="15.9" rx="1"></rect><rect x="106" y="10.8" width="2" height="26.3" rx="1"></rect><rect x="110" y="12.1" width="2" height="23.8" rx="1"></rect></svg>
+<div style="min-width: 0"><p class="serif cat-title">A 3D View of an Atmospheric River from an Earth System Model</p><p class="muted" style="font-size: .85em">SVS 4960 · MERRA-2</p></div>
+<div style="display: flex; align-items: center; gap: 1em"><button class="btn btn-icon cat-play" data-svs="4960" aria-pressed="false" aria-label="Explore and play A 3D View of an Atmospheric River from an Earth System Model"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4.5v15l12.5-7.5z"></path></svg></button></div>
+</li><li class="cat-row">
+<svg class="wave" viewBox="0 0 116 48" aria-hidden="true" fill="#7FC8F8"><rect x="2" y="20.6" width="2" height="6.9" rx="1"></rect><rect x="6" y="18.6" width="2" height="10.8" rx="1"></rect><rect x="10" y="14.1" width="2" height="19.8" rx="1"></rect><rect x="14" y="15.7" width="2" height="16.6" rx="1"></rect><rect x="18" y="15.9" width="2" height="16.2" rx="1"></rect><rect x="22" y="8.7" width="2" height="30.6" rx="1"></rect><rect x="26" y="13.7" width="2" height="20.6" rx="1"></rect><rect x="30" y="3.7" width="2" height="40.5" rx="1"></rect><rect x="34" y="16.2" width="2" height="15.6" rx="1"></rect><rect x="38" y="15.7" width="2" height="16.7" rx="1"></rect><rect x="42" y="18.6" width="2" height="10.8" rx="1"></rect><rect x="46" y="11.5" width="2" height="25.1" rx="1"></rect><rect x="50" y="16.1" width="2" height="15.9" rx="1"></rect><rect x="54" y="13.4" width="2" height="21.2" rx="1"></rect><rect x="58" y="14.6" width="2" height="18.8" rx="1"></rect><rect x="62" y="13.0" width="2" height="21.9" rx="1"></rect><rect x="66" y="8.2" width="2" height="31.6" rx="1"></rect><rect x="70" y="15.7" width="2" height="16.6" rx="1"></rect><rect x="74" y="12.0" width="2" height="24.0" rx="1"></rect><rect x="78" y="12.5" width="2" height="23.0" rx="1"></rect><rect x="82" y="14.9" width="2" height="18.3" rx="1"></rect><rect x="86" y="12.5" width="2" height="23.0" rx="1"></rect><rect x="90" y="12.9" width="2" height="22.2" rx="1"></rect><rect x="94" y="15.7" width="2" height="16.5" rx="1"></rect><rect x="98" y="13.8" width="2" height="20.4" rx="1"></rect><rect x="102" y="16.2" width="2" height="15.6" rx="1"></rect><rect x="106" y="16.2" width="2" height="15.6" rx="1"></rect><rect x="110" y="9.4" width="2" height="29.2" rx="1"></rect></svg>
+<div style="min-width: 0"><p class="serif cat-title">Air Quality Model Runs</p><p class="muted" style="font-size: .85em">SVS 5533 · GEOS-CF · July to August 2024</p></div>
+<div style="display: flex; align-items: center; gap: 1em"><button class="btn btn-icon cat-play" data-svs="5533" aria-pressed="false" aria-label="Explore and play Air Quality Model Runs"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4.5v15l12.5-7.5z"></path></svg></button></div>
+</li><li class="cat-row">
+<svg class="wave" viewBox="0 0 116 48" aria-hidden="true" fill="#7FC8F8"><rect x="2" y="15.2" width="2" height="17.6" rx="1"></rect><rect x="6" y="15.5" width="2" height="17.1" rx="1"></rect><rect x="10" y="6.0" width="2" height="35.9" rx="1"></rect><rect x="14" y="15.4" width="2" height="17.2" rx="1"></rect><rect x="18" y="14.8" width="2" height="18.3" rx="1"></rect><rect x="22" y="14.9" width="2" height="18.1" rx="1"></rect><rect x="26" y="14.7" width="2" height="18.6" rx="1"></rect><rect x="30" y="12.8" width="2" height="22.4" rx="1"></rect><rect x="34" y="15.5" width="2" height="17.0" rx="1"></rect><rect x="38" y="11.5" width="2" height="24.9" rx="1"></rect><rect x="42" y="19.9" width="2" height="8.1" rx="1"></rect><rect x="46" y="2.0" width="2" height="44.0" rx="1"></rect><rect x="50" y="9.9" width="2" height="28.3" rx="1"></rect><rect x="54" y="14.6" width="2" height="18.8" rx="1"></rect><rect x="58" y="12.4" width="2" height="23.2" rx="1"></rect><rect x="62" y="18.9" width="2" height="10.2" rx="1"></rect><rect x="66" y="11.2" width="2" height="25.7" rx="1"></rect><rect x="70" y="15.2" width="2" height="17.5" rx="1"></rect><rect x="74" y="10.5" width="2" height="27.1" rx="1"></rect><rect x="78" y="15.3" width="2" height="17.5" rx="1"></rect><rect x="82" y="14.3" width="2" height="19.5" rx="1"></rect><rect x="86" y="10.3" width="2" height="27.4" rx="1"></rect><rect x="90" y="13.3" width="2" height="21.5" rx="1"></rect><rect x="94" y="18.1" width="2" height="11.8" rx="1"></rect><rect x="98" y="14.3" width="2" height="19.3" rx="1"></rect><rect x="102" y="18.0" width="2" height="12.0" rx="1"></rect><rect x="106" y="7.7" width="2" height="32.5" rx="1"></rect><rect x="110" y="16.4" width="2" height="15.3" rx="1"></rect></svg>
+<div style="min-width: 0"><p class="serif cat-title">GEOS Aerosols</p><p class="muted" style="font-size: .85em">SVS 5669 · GEOS model · snapshot of August 19, 2025</p></div>
+<div style="display: flex; align-items: center; gap: 1em"><button class="btn btn-icon cat-play" data-svs="5669" aria-pressed="false" aria-label="Explore and play GEOS Aerosols"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4.5v15l12.5-7.5z"></path></svg></button></div>
+</li><li class="cat-row">
+<svg class="wave" viewBox="0 0 116 48" aria-hidden="true" fill="#7FC8F8"><rect x="2" y="19.4" width="2" height="9.3" rx="1"></rect><rect x="6" y="17.0" width="2" height="14.0" rx="1"></rect><rect x="10" y="14.3" width="2" height="19.5" rx="1"></rect><rect x="14" y="15.6" width="2" height="16.8" rx="1"></rect><rect x="18" y="9.9" width="2" height="28.3" rx="1"></rect><rect x="22" y="14.6" width="2" height="18.8" rx="1"></rect><rect x="26" y="13.6" width="2" height="20.7" rx="1"></rect><rect x="30" y="12.3" width="2" height="23.3" rx="1"></rect><rect x="34" y="17.6" width="2" height="12.8" rx="1"></rect><rect x="38" y="13.8" width="2" height="20.4" rx="1"></rect><rect x="42" y="16.8" width="2" height="14.3" rx="1"></rect><rect x="46" y="13.1" width="2" height="21.9" rx="1"></rect><rect x="50" y="12.2" width="2" height="23.6" rx="1"></rect><rect x="54" y="20.1" width="2" height="7.9" rx="1"></rect><rect x="58" y="15.2" width="2" height="17.6" rx="1"></rect><rect x="62" y="13.2" width="2" height="21.6" rx="1"></rect><rect x="66" y="17.8" width="2" height="12.5" rx="1"></rect><rect x="70" y="9.2" width="2" height="29.6" rx="1"></rect><rect x="74" y="16.8" width="2" height="14.4" rx="1"></rect><rect x="78" y="17.9" width="2" height="12.1" rx="1"></rect><rect x="82" y="17.9" width="2" height="12.2" rx="1"></rect><rect x="86" y="15.3" width="2" height="17.4" rx="1"></rect><rect x="90" y="6.6" width="2" height="34.9" rx="1"></rect><rect x="94" y="16.1" width="2" height="15.8" rx="1"></rect><rect x="98" y="10.5" width="2" height="27.0" rx="1"></rect><rect x="102" y="4.4" width="2" height="39.1" rx="1"></rect><rect x="106" y="19.5" width="2" height="9.0" rx="1"></rect><rect x="110" y="16.6" width="2" height="14.8" rx="1"></rect></svg>
+<div style="min-width: 0"><p class="serif cat-title">Data Sonification: Caldwell 73</p><p class="muted" style="font-size: .85em">SVS 13786 · Hubble · a sonification, not Earth data</p></div>
+<div style="display: flex; align-items: center; gap: 1em"><span class="ref-tag">Reference</span><button class="btn btn-icon cat-play" data-svs="13786" aria-pressed="false" aria-label="Explore and play Data Sonification: Caldwell 73"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4.5v15l12.5-7.5z"></path></svg></button></div>
+</li>
+</ul>
+<aside id="viewer" class="viewer" aria-labelledby="viewer-h" tabindex="-1">
+<p class="label">Now exploring · <span id="v-svs">SVS 5313</span></p>
+<h3 id="viewer-h" class="viewer-title">Change in Night Lights between 2012 and 2023</h3>
+<div class="viewer-visual">
+<canvas id="v-canvas" aria-hidden="true"></canvas>
+<p id="v-visual-label" class="viewer-ph">[Image placeholder: NASA visualization]</p>
 </div>
-<script src="js/shared.js"></script>
-<script src="js/home.js"></script>
+<div class="viewer-controls">
+<button id="v-play" class="btn btn-primary"><span class="ic-play"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4.5v15l12.5-7.5z"></path></svg></span><span class="ic-pause" hidden><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="6" y="4.5" width="4.5" height="15" rx="1"></rect><rect x="13.5" y="4.5" width="4.5" height="15" rx="1"></rect></svg></span><span class="v-play-label">Play the sound</span></button>
+<span id="v-time" class="muted" style="font-variant-numeric: tabular-nums; font-size: .9em">0:00 / 0:40</span>
+</div>
+<label for="v-timeline" class="sr">Position in the sound</label>
+<input id="v-timeline" type="range" min="0" max="400" value="0">
+<p id="v-note" class="demo-note"></p>
+<dl id="v-map" class="v-map"></dl>
+<div class="v-explain">
+<div><h4>What you are seeing</h4><p id="v-see" class="muted"></p></div>
+<div><h4>What you are hearing</h4><p id="v-hear" class="muted"></p></div>
+<div><h4>Where this data comes from</h4><p class="muted"><span id="v-source"></span> <a id="v-link" href="#" target="_blank" rel="noopener">Open on the SVS site<span class="sr"> (opens in a new tab)</span></a></p></div>
+<div><h4>Why it matters</h4><p id="v-why" class="muted"></p></div>
+</div>
+<p id="v-status" class="sr" aria-live="polite"></p>
+</aside>
+</div>
+</section>
+</main>
+<footer class="ftr">
+<div class="ftr-row">
+<p>Data and visualizations: <a href="#">NASA Scientific Visualization Studio</a> [link placeholder]</p>
+<nav aria-label="Footer"><ul><li><a href="#">About</a></li><li><a href="#">Accessibility</a></li><li><a href="#">Data catalog</a></li><li><a href="#">Contact</a></li></ul></nav>
+</div>
+</footer>
+<section class="np" aria-label="Now playing">
+<div class="np-row">
+<button class="btn btn-primary btn-icon" aria-label="Pause" id="np-play"><span class="ic-pause"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="6" y="4.5" width="4.5" height="15" rx="1"></rect><rect x="13.5" y="4.5" width="4.5" height="15" rx="1"></rect></svg></span><span class="ic-play" hidden><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4.5v15l12.5-7.5z"></path></svg></span></button>
+<div style="min-width: 14em; max-width: 26em">
+<p class="label" style="font-size: .68em">Now playing</p>
+<p class="np-title">Data Sonification: Caldwell 73</p>
+</div>
+<p id="np-cap" class="np-cap" aria-live="polite">Caption · <span>Each star in this Hubble image becomes a note. Stars farther from the center sound higher.</span></p>
+<p id="np-audio-off" class="np-cap" hidden>Audio is off. Captions only.</p>
+<div class="vol"><label for="np-vol" class="sr">Volume</label><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z"></path><path d="M16.5 8.5a5 5 0 0 1 0 7"></path><path d="M19 6a8.5 8.5 0 0 1 0 12"></path></svg><input id="np-vol" type="range" min="0" max="100" value="70"></div>
+<div><span class="sr">Output level: [level placeholder]</span><div class="meter" aria-hidden="true"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></div>
+</div>
+</section>
+</div>
+
 </body>
 </html>

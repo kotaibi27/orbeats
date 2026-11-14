@@ -4,38 +4,48 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>ORBEATS — Audio-first mode</title>
-<link rel="stylesheet" href="css/style.css">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"><link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,300;6..72,400&amp;family=Inter:wght@300;400;500&amp;display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/styles.css">
+<script src="js/app.js" defer></script>
+<script src="js/audio-first.js" defer></script>
 </head>
-<body data-page="audio" data-np-title="Change in Night Lights between 2012 and 2023" data-np-caption="[Spoken description placeholder]">
+<body>
 <div class="app" id="app">
-<div id="site-header"></div>
+<a class="skip" href="#main">Skip to content</a>
+<header class="hdr">
+<div class="hdr-row">
+<a class="logo" href="index.html" aria-label="ORBEATS, Audio-first mode, home"><svg width="34" height="34" viewBox="0 0 34 34" aria-hidden="true"><circle cx="17" cy="17" r="16" fill="none" stroke="#7FC8F8" stroke-width="1"></circle><circle cx="17" cy="17" r="11.5" fill="none" stroke="#7FC8F8" stroke-opacity=".35" stroke-width="1"></circle><circle cx="17" cy="17" r="7" fill="none" stroke="#7FC8F8" stroke-opacity=".35" stroke-width="1"></circle><circle cx="17" cy="17" r="1.6" fill="#E8EDF5"></circle></svg><span><span class="wordmark">ORBEATS</span><span class="tagline">Audio-first mode</span></span></a>
+<a class="btn" href="index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"></path></svg>Exit audio-first mode</a>
+<div class="a11y" role="toolbar" aria-label="Accessibility settings">
+<div class="tool-group"><span class="sr">Text size</span><span aria-hidden="true">Text</span><button class="tool" aria-label="Decrease text size" data-action="text-smaller">A−</button><span id="text-pct" aria-live="polite" style="min-width: 2.8em; text-align: center; color: var(--text)">100%</span><button class="tool" aria-label="Increase text size" data-action="text-bigger">A+</button></div>
+<button class="tool" aria-pressed="false" data-setting="hc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="8.5"></circle><path d="M12 3.5v17a8.5 8.5 0 0 0 0-17z" fill="currentColor"></path></svg><span>Contrast</span><span class="state">Off</span></button>
+<button class="tool" aria-pressed="true" data-setting="audio"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z"></path><path d="M16.5 8.5a5 5 0 0 1 0 7"></path><path d="M19 6a8.5 8.5 0 0 1 0 12"></path></svg><span>Audio</span><span class="state">On</span></button>
+<button class="tool" aria-pressed="true" data-setting="cc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="3"></rect><path d="M10.5 10.2a2.5 2.5 0 1 0 0 3.6M17 10.2a2.5 2.5 0 1 0 0 3.6"></path></svg><span>Captions</span><span class="state">On</span></button>
+</div>
+</div>
+</header>
 <main id="main" tabindex="-1">
-
 <div class="wrap" style="max-width: 46em; padding-top: 4.5em; display: flex; flex-direction: column; gap: 2.5em">
 <div style="display: flex; flex-direction: column; gap: .9em">
 <p class="label">Voice-guided · simplified layout</p>
 <h1 style="font-size: 3.2em">Audio-first mode</h1>
 <p class="muted" style="font-size: 1.15em">One track at a time. The voice guide describes each sound before it plays.</p>
 </div>
-
 <section aria-labelledby="vg-h" style="border-top: 1px solid var(--line); padding-top: 1.6em">
 <h2 id="vg-h" class="label" style="font-family: Inter, sans-serif; margin-bottom: .8em">Voice guide</h2>
-<p id="transcript" aria-live="polite" class="serif" style="font-size: 1.6em; line-height: 1.45"></p>
+<p id="af-transcript" aria-live="polite" class="serif" style="font-size: 1.6em; line-height: 1.45"></p>
 </section>
-
 <section aria-labelledby="ct-h" style="border-top: 1px solid var(--line); padding-top: 1.6em">
-<p class="label" id="track-label"></p>
+<p id="af-meta" class="label">Track 1 of 8</p>
 <h2 id="ct-h" style="font-size: 2em; margin: .3em 0 .6em"></h2>
 <p class="muted">What you are hearing: [Sound description placeholder]</p>
 </section>
-
 <div role="group" aria-label="Playback controls" style="display: flex; flex-direction: column; gap: .8em">
-<button class="btn btn-primary big-btn" id="btn-play"></button>
-<button class="btn big-btn" id="btn-next"><span class="row"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M5 5v14l10-7z"></path><rect x="16" y="5" width="3" height="14" rx="1"></rect></svg>Next track</span><span class="state">N</span></button>
-<button class="btn big-btn" id="btn-repeat"><span class="row"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12a8 8 0 0 1 13.7-5.7L20 8.5M20 4v4.5h-4.5M20 12a8 8 0 0 1-13.7 5.7L4 15.5M4 20v-4.5h4.5"></path></svg>Repeat description</span><span class="state">R</span></button>
-<button class="btn big-btn" id="btn-help"><span class="row"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.7.3-1 .9-1 1.7M12 17h.01"></path></svg>Help</span><span class="state">H</span></button>
+<button id="af-play" class="btn btn-primary" style="min-height: 80px; font-size: 1.3em; justify-content: space-between; border-radius: 12px; padding: 0 1.3em"><span style="display: inline-flex; align-items: center; gap: .7em"><span class="ic-pause"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="6" y="4.5" width="4.5" height="15" rx="1"></rect><rect x="13.5" y="4.5" width="4.5" height="15" rx="1"></rect></svg></span><span class="ic-play" hidden><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4.5v15l12.5-7.5z"></path></svg></span><span>Pause track</span></span><span class="state">Space</span></button>
+<button id="af-next" class="btn" style="min-height: 80px; font-size: 1.3em; justify-content: space-between; border-radius: 12px; padding: 0 1.3em"><span style="display: inline-flex; align-items: center; gap: .7em"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M5 5v14l10-7z"></path><rect x="16" y="5" width="3" height="14" rx="1"></rect></svg><span>Next track</span></span><span class="state">N</span></button>
+<button id="af-repeat" class="btn" style="min-height: 80px; font-size: 1.3em; justify-content: space-between; border-radius: 12px; padding: 0 1.3em"><span style="display: inline-flex; align-items: center; gap: .7em"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12a8 8 0 0 1 13.7-5.7L20 8.5M20 4v4.5h-4.5M20 12a8 8 0 0 1-13.7 5.7L4 15.5M4 20v-4.5h4.5"></path></svg><span>Repeat description</span></span><span class="state">R</span></button>
+<button id="af-help" class="btn" style="min-height: 80px; font-size: 1.3em; justify-content: space-between; border-radius: 12px; padding: 0 1.3em"><span style="display: inline-flex; align-items: center; gap: .7em"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.7.3-1 .9-1 1.7M12 17h.01"></path></svg><span>Help</span></span><span class="state">H</span></button>
 </div>
-
 <section aria-labelledby="keys-h" style="border-top: 1px solid var(--line); padding-top: 1.6em">
 <h2 id="keys-h" class="label" style="font-family: Inter, sans-serif; margin-bottom: 1em">Keyboard shortcuts</h2>
 <dl style="display: grid; grid-template-columns: 6em 1fr; gap: .6em 1.2em; margin: 0">
@@ -43,16 +53,31 @@
 <dt>N / P</dt><dd class="muted" style="margin: 0">Next or previous track</dd>
 <dt>R</dt><dd class="muted" style="margin: 0">Repeat the description</dd>
 <dt>H</dt><dd class="muted" style="margin: 0">Help</dd>
-<dt>↑ / ↓</dt><dd class="muted" style="margin: 0">Volume up or down</dd>
 <dt>Esc</dt><dd class="muted" style="margin: 0">Return to the standard layout</dd>
 </dl>
 </section>
 </div>
-
 </main>
-<div id="site-footer"></div>
+<footer class="ftr">
+<div class="ftr-row">
+<p>Data and visualizations: <a href="#">NASA Scientific Visualization Studio</a> [link placeholder]</p>
+<nav aria-label="Footer"><ul><li><a href="#">About</a></li><li><a href="#">Accessibility</a></li><li><a href="#">Data catalog</a></li><li><a href="#">Contact</a></li></ul></nav>
 </div>
-<script src="js/shared.js"></script>
-<script src="js/audio-first.js"></script>
+</footer>
+<section class="np" aria-label="Now playing">
+<div class="np-row">
+<button class="btn btn-primary btn-icon" aria-label="Pause" id="np-play"><span class="ic-pause"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="6" y="4.5" width="4.5" height="15" rx="1"></rect><rect x="13.5" y="4.5" width="4.5" height="15" rx="1"></rect></svg></span><span class="ic-play" hidden><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4.5v15l12.5-7.5z"></path></svg></span></button>
+<div style="min-width: 14em; max-width: 26em">
+<p class="label" style="font-size: .68em">Now playing</p>
+<p class="np-title">Change in Night Lights between 2012 and 2023</p>
+</div>
+<p id="np-cap" class="np-cap" aria-live="polite">Caption · <span>[Spoken description placeholder]</span></p>
+<p id="np-audio-off" class="np-cap" hidden>Audio is off. Captions only.</p>
+<div class="vol"><label for="np-vol" class="sr">Volume</label><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z"></path><path d="M16.5 8.5a5 5 0 0 1 0 7"></path><path d="M19 6a8.5 8.5 0 0 1 0 12"></path></svg><input id="np-vol" type="range" min="0" max="100" value="70"></div>
+<div><span class="sr">Output level: [level placeholder]</span><div class="meter" aria-hidden="true"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></div>
+</div>
+</section>
+</div>
+
 </body>
 </html>

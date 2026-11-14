@@ -1,54 +1,59 @@
-# ORBEATS
+# ORBEATS — The Earth Information Jukebox
 
-The Earth Information Jukebox. A website that turns NASA Earth data into something people can explore, play and compose with, with a voice-guided audio-first mode for blind and low-vision visitors.
+Static website template (space palette version). Home page background: NASA SVS 13786, Data Sonification: Caldwell 73.
+Plain HTML, CSS and JavaScript. No build step and no Claude canvas runtime (`support.js`) needed.
 
-Built for the NASA Space Apps Challenge 2026, challenge "The Earth Information Jukebox".
+## Run it
 
-This is the website template. The Explore and Compose sections are empty on purpose, so the team can fill them in.
+Open `index.html` in a browser, or serve the folder locally:
 
-## How to run it on any laptop
+    python -m http.server 8000
 
-No install is needed. It is plain HTML, CSS and JavaScript.
+then visit http://localhost:8000
 
-Option 1 (easiest): download or clone this repo, then double-click `index.html`.
+## Files
 
-Option 2 (local server): open a terminal in this folder and run
+| File | Page |
+|---|---|
+| `index.html` | Explore (home): video hero, who it is for, why it works, audio-first, data catalog |
+| `play.html` | Tab 2 — game picker, game mode, controls selector, empty stage |
+| `compose.html` | Tab 3 — empty content canvas |
+| `audio-first.html` | Audio-first mode (working keyboard shortcuts) |
+| `components.html` | Component set |
+| `css/styles.css` | All styles and colour tokens |
+| `js/app.js` | Accessibility toolbar, now-playing bar, switches (shared by every page) |
+| `js/home.js` | Hero star animation, count-up numbers |
+| `js/explore.js` | Explore: catalog list + viewer (sound, timeline, visualizer, explanation) |
+| `js/play.js`, `js/audio-first.js` | Page-specific behaviour |
 
-    python3 -m http.server 8000
+## Adding your content
 
-then open http://localhost:8000 in a browser. Use this if you plan to load data files with fetch(), because browsers block that when a page is opened as a file.
+- Compose: replace the dashed `.zone` boxes inside `<main>` with your own markup.
+- Explore viewer: the 8 Earth datasets play a DEMO sound generated in the browser (`makeDemo()` in `js/explore.js`). Replace each case with real NASA data. Caldwell 73 plays the real sonification from the hero video.
+- Now-playing bar from your own audio code:
 
-Fonts are bundled in `fonts/`, so they work offline. The home page background video streams from NASA (internet needed). To make it work offline too, download `Caldwell73_2K_Final.webm` from https://svs.gsfc.nasa.gov/13786/ and save it as `media/caldwell73.webm`; the page uses that copy first.
+      ORBEATS.setNowPlaying('Change in Night Lights between 2012 and 2023', 'Brighter areas play higher notes');
+      document.addEventListener('orbeats:play', e => e.detail.playing ? myAudio.play() : myAudio.pause());
 
-## What is in the repo
+- `ORBEATS.settings.audio` and `ORBEATS.settings.cc` tell you whether audio and captions are on.
 
-    index.html          Tab 1: Explore and home (video hero with music, impact numbers, why it matters, data catalog)
-    play.html           Tab 2: Play (game on/off switches, game mode, controls)
-    compose.html        Tab 3: Compose (empty content area for us to fill)
-    audio-first.html    Audio-first mode (voice guide, big buttons, keyboard shortcuts)
-    components.html     Colors, type and controls reference
-    css/style.css       All styles
-    js/shared.js        Header, footer, now-playing bar, accessibility toolbar, data catalog
-    js/home.js          Home page: catalog list, background video and music button
-    js/play.js          Play page switches and controls
-    js/audio-first.js   Audio-first mode tracks and keyboard shortcuts
-    js/components.js    Component set page
+All motion stops when the visitor's system prefers reduced motion.
+Data and visualizations: NASA Scientific Visualization Studio.
 
-## Where to edit
+## Explore (home) hero
 
-- Header, footer or now-playing bar: `js/shared.js` (edit once, every page changes).
-- The NASA data catalog: the `CATALOG` list at the top of `js/shared.js`. The home page list and the audio-first tracks both read it.
-- Game names: the `GAMES` list at the top of `js/play.js`.
-- Explore is the home page (`index.html`). Compose content goes inside the content area of `compose.html` (look for the comment "Empty on purpose").
-- Colors: the variables at the top of the `.app` rule in `css/style.css`.
+Layers inside `<section class="hero">`, bottom to top (`index.html`, `css/home.css`, `js/home.js`):
 
-## Things to know
+1. Navy `#05080F`
+2. `#hero-canvas`: animated stars drifting outward with ice-blue beat rings. Always running, so the screen is never still, even if the video fails.
+3. `#bg-video`: the Caldwell 73 video (SVS 13786), full brightness, `object-fit: cover`. It fades in once it actually plays.
+4. `.hero-shade`: soft fade at the bottom only, behind the text.
+5. Wordmark, subtitle, buttons, caption and credit (lower left).
 
-- The Play and Now playing buttons do not make sound yet. They only switch the state and animation. Audio comes next.
-- The accessibility toolbar settings (text size, contrast, audio, captions) are remembered while moving between pages.
+Motion ignores the system reduce-motion setting by design; the Pause button in the now-playing bar stops the video and the animation together.
 
-## Credits
+Sound is the video's own audio track (no separate file). "Tap to hear the music" unmutes at 80%. The big button, the now-playing
+Play/Pause and volume, and the toolbar Audio toggle all control the same video element (`js/app.js`, section 2).
+If the browser blocks sound, "Sound is blocked. Tap the button again to turn it on." appears.
 
-Data, video and sonification: NASA Scientific Visualization Studio (https://svs.gsfc.nasa.gov/, SVS 13786, Caldwell 73, Hubble imagery). This is not an official NASA product.
-
-The original design lives in the Claude Design file: https://claude.ai/artifact/Gx81G4nvM9z1FzZ2nvYGay
+To swap the video: change the two `<source>` lines in `index.html` and `MUSIC_SRC` / `MUSIC_TITLE` in `js/app.js`.

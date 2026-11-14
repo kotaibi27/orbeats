@@ -1,73 +1,72 @@
-// Audio-first mode: one track at a time, a voice guide text, big buttons and keyboard shortcuts.
+// Audio-first mode: one track at a time, with keyboard shortcuts.
+(function () {
+  const catalog = [
+  [
+    "5313",
+    "Change in Night Lights between 2012 and 2023"
+  ],
+  [
+    "3912",
+    "Global Sea Surface Currents and Temperature"
+  ],
+  [
+    "5425",
+    "Perpetual Ocean 2: Western Boundary Currents"
+  ],
+  [
+    "4950",
+    "GEDI Forest Height"
+  ],
+  [
+    "5011",
+    "Lightning Events Detected from the ISS, 2017 to 2023"
+  ],
+  [
+    "4960",
+    "A 3D View of an Atmospheric River from an Earth System Model"
+  ],
+  [
+    "5533",
+    "Air Quality Model Runs"
+  ],
+  [
+    "5669",
+    "GEOS Aerosols"
+  ]
+];
+  let track = 0;
 
-// The tracks are the Earth data items from the catalog (the Hubble reference item is left out).
-var TRACKS = CATALOG.filter(function (item) { return !item.reference; });
-var current = 0;
-var message = 'intro';
+  const transcript = document.getElementById('af-transcript');
+  const meta = document.getElementById('af-meta');
+  const title = document.getElementById('ct-h');
 
-function transcriptText() {
-  var title = TRACKS[current].title;
-  if (message === 'repeat') return '[Repeated description placeholder for ' + title + ']';
-  if (message === 'help') return 'Space plays or pauses. N moves to the next track and P to the previous one. R repeats. Escape returns to the standard layout.';
-  return 'Track ' + (current + 1) + ' of ' + TRACKS.length + ': ' + title + '. [Spoken description placeholder] Press Space to play.';
-}
+  function show(message) {
+    const t = catalog[track];
+    meta.textContent = 'Track ' + (track + 1) + ' of ' + catalog.length + ' · SVS ' + t[0];
+    title.textContent = t[1];
+    if (message === 'repeat') transcript.textContent = '[Repeated description placeholder for ' + t[1] + ']';
+    else if (message === 'help') transcript.textContent = 'Space plays or pauses. N moves to the next track. R repeats. Escape returns to the standard layout.';
+    else transcript.textContent = 'Track ' + (track + 1) + ' of ' + catalog.length + ': ' + t[1] + '. [Spoken description placeholder] Press Space to play.';
+    if (window.ORBEATS) window.ORBEATS.setNowPlaying(t[1]);
+  }
 
-function drawTrack() {
-  var track = TRACKS[current];
-  document.getElementById('track-label').textContent = 'Track ' + (current + 1) + ' of ' + TRACKS.length + ' · SVS ' + track.svs;
-  document.getElementById('ct-h').textContent = track.title;
-  document.getElementById('transcript').textContent = transcriptText();
-  setNowPlayingTitle(track.title);
-}
+  function next(step) { track = (track + step + catalog.length) % catalog.length; show('intro'); }
 
-function drawPlayButton() {
-  var icon = settings.playing ? ICONS.pause : ICONS.play;
-  var label = settings.playing ? 'Pause' : 'Play';
-  document.getElementById('btn-play').innerHTML = '<span class="row">' + icon + label + ' track</span><span class="state">Space</span>';
-}
+  document.getElementById('af-next').addEventListener('click', function () { next(1); });
+  document.getElementById('af-repeat').addEventListener('click', function () { show('repeat'); });
+  document.getElementById('af-help').addEventListener('click', function () { show('help'); });
 
-function goToTrack(index) {
-  current = (index + TRACKS.length) % TRACKS.length;
-  message = 'intro';
-  drawTrack();
-}
+  document.addEventListener('keydown', function (e) {
+    const tag = e.target.tagName;
+    if (tag === 'INPUT' || tag === 'TEXTAREA') return;
+    const k = e.key.toLowerCase();
+    if (k === ' ' && tag !== 'BUTTON' && tag !== 'A') { e.preventDefault(); window.ORBEATS.togglePlay(); }
+    else if (k === 'n') next(1);
+    else if (k === 'p') next(-1);
+    else if (k === 'r') show('repeat');
+    else if (k === 'h') show('help');
+    else if (k === 'escape') window.location.href = 'index.html';
+  });
 
-function togglePlay() { change('playing', !settings.playing); }
-function repeatDescription() { message = 'repeat'; drawTrack(); }
-function showHelp() { message = 'help'; drawTrack(); }
-
-document.getElementById('btn-play').addEventListener('click', togglePlay);
-document.getElementById('btn-next').addEventListener('click', function () { goToTrack(current + 1); });
-document.getElementById('btn-repeat').addEventListener('click', repeatDescription);
-document.getElementById('btn-help').addEventListener('click', showHelp);
-
-// Keep the big play button in step with the one in the now-playing bar.
-onSettingsChange(drawPlayButton);
-
-function changeVolume(amount) {
-  var volume = document.getElementById('np-vol');
-  volume.value = Math.max(0, Math.min(100, Number(volume.value) + amount));
-}
-
-document.addEventListener('keydown', function (event) {
-  if (event.ctrlKey || event.metaKey || event.altKey) return;
-  var target = event.target;
-  var onButton = target.tagName === 'BUTTON' || target.tagName === 'A';
-  var onSlider = target.tagName === 'INPUT' && target.type === 'range';
-  var key = event.key.toLowerCase();
-
-  if (key === ' ') {
-    if (onButton) return; // the browser already presses the button
-    event.preventDefault();
-    togglePlay();
-  } else if (key === 'n') { goToTrack(current + 1); }
-  else if (key === 'p') { goToTrack(current - 1); }
-  else if (key === 'r') { repeatDescription(); }
-  else if (key === 'h') { showHelp(); }
-  else if (key === 'escape') { window.location.href = 'index.html'; }
-  else if (key === 'arrowup' && !onSlider) { event.preventDefault(); changeVolume(10); }
-  else if (key === 'arrowdown' && !onSlider) { event.preventDefault(); changeVolume(-10); }
-});
-
-drawTrack();
-drawPlayButton();
+  show('intro');
+})();

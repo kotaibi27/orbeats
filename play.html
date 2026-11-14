@@ -4,13 +4,27 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>ORBEATS — Play</title>
-<link rel="stylesheet" href="css/style.css">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"><link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,300;6..72,400&amp;family=Inter:wght@300;400;500&amp;display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/styles.css">
+<script src="js/app.js" defer></script>
+<script src="js/play.js" defer></script>
 </head>
-<body data-page="play" data-np-title="Air Tiles · [track placeholder]">
+<body>
 <div class="app" id="app">
-<div id="site-header"></div>
+<a class="skip" href="#main">Skip to content</a>
+<header class="hdr">
+<div class="hdr-row">
+<a class="logo" href="index.html" aria-label="ORBEATS, The Earth Information Jukebox, home"><svg width="34" height="34" viewBox="0 0 34 34" aria-hidden="true"><circle cx="17" cy="17" r="16" fill="none" stroke="#7FC8F8" stroke-width="1"></circle><circle cx="17" cy="17" r="11.5" fill="none" stroke="#7FC8F8" stroke-opacity=".35" stroke-width="1"></circle><circle cx="17" cy="17" r="7" fill="none" stroke="#7FC8F8" stroke-opacity=".35" stroke-width="1"></circle><circle cx="17" cy="17" r="1.6" fill="#E8EDF5"></circle></svg><span><span class="wordmark">ORBEATS</span><span class="tagline">The Earth Information Jukebox</span></span></a>
+<nav aria-label="Main sections"><ul class="tabs"><li><a class="tab" href="index.html">Explore</a></li><li><a class="tab" href="play.html" aria-current="page">Play</a></li><li><a class="tab" href="compose.html">Compose</a></li></ul></nav>
+<div class="a11y" role="toolbar" aria-label="Accessibility settings">
+<div class="tool-group"><span class="sr">Text size</span><span aria-hidden="true">Text</span><button class="tool" aria-label="Decrease text size" data-action="text-smaller">A−</button><span id="text-pct" aria-live="polite" style="min-width: 2.8em; text-align: center; color: var(--text)">100%</span><button class="tool" aria-label="Increase text size" data-action="text-bigger">A+</button></div>
+<button class="tool" aria-pressed="false" data-setting="hc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="8.5"></circle><path d="M12 3.5v17a8.5 8.5 0 0 0 0-17z" fill="currentColor"></path></svg><span>Contrast</span><span class="state">Off</span></button>
+<button class="tool" aria-pressed="true" data-setting="audio"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z"></path><path d="M16.5 8.5a5 5 0 0 1 0 7"></path><path d="M19 6a8.5 8.5 0 0 1 0 12"></path></svg><span>Audio</span><span class="state">On</span></button>
+<button class="tool" aria-pressed="true" data-setting="cc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="3"></rect><path d="M10.5 10.2a2.5 2.5 0 1 0 0 3.6M17 10.2a2.5 2.5 0 1 0 0 3.6"></path></svg><span>Captions</span><span class="state">On</span></button>
+</div>
+</div>
+</header>
 <main id="main" tabindex="-1">
-
 <div class="wrap" style="padding-top: 4.5em">
 <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 1.5em; padding-bottom: 2.5em; border-bottom: 1px solid var(--line); margin-bottom: 2.5em">
 <div style="display: flex; flex-direction: column; gap: .9em">
@@ -19,34 +33,73 @@
 <p class="muted" style="font-size: 1.1em">[One-line subtitle placeholder]</p>
 </div>
 <div style="display: flex; align-items: center; gap: 1.2em">
-<div style="text-align: right"><p>Game mode</p><p class="muted" style="font-size: .85em" id="mode-hint">Score, timer and streaks</p></div>
-<button class="switch" id="mode-switch" role="switch" aria-checked="true" aria-label="Game mode"><span class="track" aria-hidden="true"></span><span class="state" id="mode-state">On</span></button>
+<div style="text-align: right"><p>Game mode</p><p id="mode-hint" class="muted" style="font-size: .85em">Score, timer and streaks</p></div>
+<button class="switch" role="switch" aria-checked="true" aria-label="Game mode" id="game-mode"><span class="track" aria-hidden="true"></span><span class="state">On</span></button>
 </div>
 </div>
 
 <section aria-labelledby="gp-h">
 <h2 id="gp-h" class="label" style="font-family: Inter, sans-serif; margin-bottom: 1.2em">Games</h2>
-<!-- The three game cards are built by js/play.js. Rename the games in the GAMES list there. -->
-<div class="g-3" id="games"></div>
+<div class="g-3">
+<article style="display: flex; flex-direction: column; gap: 1em; padding-top: 1.2em; border-top: 1px solid var(--line)">
+<div class="thumb" style="aspect-ratio: 16 / 9">[Image placeholder]</div>
+<div style="display: flex; justify-content: space-between; align-items: center; gap: .8em">
+<h3 style="font-size: 1.6em">Guess the Year</h3>
+<button class="switch" role="switch" aria-checked="true" aria-label="Guess the Year enabled"><span class="track" aria-hidden="true"></span><span class="state">On</span></button>
+</div>
+<p class="muted" style="font-size: .9em">[One-line description placeholder]</p>
+</article>
+<article style="display: flex; flex-direction: column; gap: 1em; padding-top: 1.2em; border-top: 1px solid var(--line)">
+<div class="thumb" style="aspect-ratio: 16 / 9">[Image placeholder]</div>
+<div style="display: flex; justify-content: space-between; align-items: center; gap: .8em">
+<h3 style="font-size: 1.6em">Air Tiles</h3>
+<button class="switch" role="switch" aria-checked="true" aria-label="Air Tiles enabled"><span class="track" aria-hidden="true"></span><span class="state">On</span></button>
+</div>
+<p class="muted" style="font-size: .9em">[One-line description placeholder]</p>
+</article>
+<article style="display: flex; flex-direction: column; gap: 1em; padding-top: 1.2em; border-top: 1px solid var(--line)">
+<div class="thumb" style="aspect-ratio: 16 / 9">[Image placeholder]</div>
+<div style="display: flex; justify-content: space-between; align-items: center; gap: .8em">
+<h3 style="font-size: 1.6em">Earth Simon</h3>
+<button class="switch" role="switch" aria-checked="true" aria-label="Earth Simon enabled"><span class="track" aria-hidden="true"></span><span class="state">On</span></button>
+</div>
+<p class="muted" style="font-size: .9em">[One-line description placeholder]</p>
+</article>
+</div>
 </section>
 
 <section aria-labelledby="ctl-h" style="display: flex; flex-wrap: wrap; align-items: center; gap: 1em 1.5em; margin-top: 3.5em">
 <h2 id="ctl-h" class="label" style="font-family: Inter, sans-serif">Controls</h2>
-<div class="seg" role="radiogroup" aria-labelledby="ctl-h" id="controls"></div>
-<p class="muted" style="font-size: .85em" id="control-note" aria-live="polite"></p>
+<div class="seg" role="radiogroup" aria-labelledby="ctl-h"><label><input type="radio" name="ctrl" value="camera"><span>Camera and hand gestures</span></label><label><input type="radio" name="ctrl" value="keyboard" checked><span>Keyboard</span></label><label><input type="radio" name="ctrl" value="touch"><span>Touch or click</span></label></div>
+<p id="ctrl-note" class="muted" style="font-size: .85em" aria-live="polite">[Keyboard instructions placeholder]</p>
 </section>
 
-<!-- Empty on purpose: the game goes in the game stage. -->
 <div class="g-main" style="margin-top: 2em">
-<section aria-label="Game stage" class="zone zone-c" style="min-height: 34em">[Game stage: placeholder]</section>
+<section aria-label="Game stage" id="game-stage" class="zone zone-c" style="min-height: 34em">[Game stage: placeholder]</section>
 <aside aria-label="Score and feedback" class="zone" style="min-height: 34em">[Score and feedback area]</aside>
 </div>
 </div>
-
 </main>
-<div id="site-footer"></div>
+<footer class="ftr">
+<div class="ftr-row">
+<p>Data and visualizations: <a href="#">NASA Scientific Visualization Studio</a> [link placeholder]</p>
+<nav aria-label="Footer"><ul><li><a href="#">About</a></li><li><a href="#">Accessibility</a></li><li><a href="#">Data catalog</a></li><li><a href="#">Contact</a></li></ul></nav>
 </div>
-<script src="js/shared.js"></script>
-<script src="js/play.js"></script>
+</footer>
+<section class="np" aria-label="Now playing">
+<div class="np-row">
+<button class="btn btn-primary btn-icon" aria-label="Pause" id="np-play"><span class="ic-pause"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="6" y="4.5" width="4.5" height="15" rx="1"></rect><rect x="13.5" y="4.5" width="4.5" height="15" rx="1"></rect></svg></span><span class="ic-play" hidden><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4.5v15l12.5-7.5z"></path></svg></span></button>
+<div style="min-width: 14em; max-width: 26em">
+<p class="label" style="font-size: .68em">Now playing</p>
+<p class="np-title">Air Tiles · [track placeholder]</p>
+</div>
+<p id="np-cap" class="np-cap" aria-live="polite">Caption · <span>[What this sound represents placeholder]</span></p>
+<p id="np-audio-off" class="np-cap" hidden>Audio is off. Captions only.</p>
+<div class="vol"><label for="np-vol" class="sr">Volume</label><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z"></path><path d="M16.5 8.5a5 5 0 0 1 0 7"></path><path d="M19 6a8.5 8.5 0 0 1 0 12"></path></svg><input id="np-vol" type="range" min="0" max="100" value="70"></div>
+<div><span class="sr">Output level: [level placeholder]</span><div class="meter" aria-hidden="true"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></div>
+</div>
+</section>
+</div>
+
 </body>
 </html>
