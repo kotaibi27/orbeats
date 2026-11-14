@@ -22,8 +22,7 @@ Fonts are bundled in `fonts/`, so they work offline. The home page background vi
 
 ## What is in the repo
 
-    index.html          Home page (video background with music, data catalog)
-    explore.html        Tab 1: Explore (empty content area for us to fill)
+    index.html          Tab 1: Explore and home (video hero with music, impact numbers, why it matters, data catalog)
     play.html           Tab 2: Play (game on/off switches, game mode, controls)
     compose.html        Tab 3: Compose (empty content area for us to fill)
     audio-first.html    Audio-first mode (voice guide, big buttons, keyboard shortcuts)
@@ -40,7 +39,7 @@ Fonts are bundled in `fonts/`, so they work offline. The home page background vi
 - Header, footer or now-playing bar: `js/shared.js` (edit once, every page changes).
 - The NASA data catalog: the `CATALOG` list at the top of `js/shared.js`. The home page list and the audio-first tracks both read it.
 - Game names: the `GAMES` list at the top of `js/play.js`.
-- Explore and Compose content: put it inside the content area of `explore.html` and `compose.html` (look for the comment "Empty on purpose").
+- Explore is the home page (`index.html`). Compose content goes inside the content area of `compose.html` (look for the comment "Empty on purpose").
 - Colors: the variables at the top of the `.app` rule in `css/style.css`.
 
 ## Things to know

@@ -6,45 +6,55 @@
 <title>ORBEATS — Home</title>
 <link rel="stylesheet" href="css/style.css">
 </head>
-<body class="has-video" data-page="home" data-np-title="Data Sonification: Caldwell 73" data-np-caption="Stars become notes. Farther from the center, higher pitch.">
-<div class="bg-video" aria-hidden="true">
-<video id="bg-video" autoplay muted loop playsinline preload="auto">
-<source src="media/caldwell73.webm" type="video/webm">
-<source src="https://svs.gsfc.nasa.gov/vis/a010000/a013700/a013786/Caldwell73_2K_Final.webm" type="video/webm">
-</video>
-<div class="bg-scrim"></div>
-</div>
+<body data-page="explore" data-np-title="Data Sonification: Caldwell 73" data-np-caption="Stars become notes. Farther from the center, higher pitch.">
 <div class="app" id="app">
 <div id="site-header"></div>
 <main id="main" tabindex="-1">
 
-<section class="wrap home-hero" aria-labelledby="hero-h">
-<div class="hero-head">
-<div style="display: flex; flex-direction: column; gap: .5em">
+<section class="vhero" aria-labelledby="hero-h">
+<canvas id="orbit-canvas" aria-hidden="true"></canvas>
+<video id="bg-video" autoplay muted loop playsinline preload="auto" aria-hidden="true">
+<source src="media/caldwell73.webm" type="video/webm">
+<source src="https://svs.gsfc.nasa.gov/vis/a010000/a013700/a013786/Caldwell73_2K_Final.webm" type="video/webm">
+</video>
+<div class="vhero-shade"></div>
+<div class="wrap vhero-body">
 <h1 id="hero-h" class="hero-mark">ORBEATS</h1>
-<p class="muted" style="font-size: 1.1em">[One-line subtitle placeholder]</p>
+<p style="font-size: 1.2em; max-width: 24em">The Earth Information Jukebox. NASA data, turned into sound anyone can hear.</p>
+<div style="display: flex; flex-wrap: wrap; align-items: center; gap: .8em 1.4em; margin-top: 1.4em">
+<button class="btn btn-primary" id="music-btn" aria-pressed="false" style="min-height: 56px; padding: 0 1.8em"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4z"></path><path d="M15.5 8.5a5 5 0 0 1 0 7"></path></svg><span id="music-label">Tap to hear the music</span></button>
+<a class="btn" href="play.html" style="min-height: 56px; padding: 0 1.6em; background: rgba(5,8,15,.55)">Play a game</a>
+<a href="audio-first.html" style="display: inline-flex; align-items: center; min-height: 48px">Audio-first mode</a>
 </div>
-<div style="display: flex; flex-wrap: wrap; align-items: center; gap: .8em 1.8em">
-<a class="btn btn-primary" href="explore.html" style="min-height: 56px; padding: 0 1.8em">Start exploring<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></a>
-<a href="audio-first.html" style="display: inline-flex; align-items: center; min-height: 48px; font-size: .95em">Audio-first mode</a>
-</div>
-</div>
-
-<div class="hearing">
-<button class="btn" id="music-btn" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4z"></path><path d="M15.5 8.5a5 5 0 0 1 0 7"></path></svg><span id="music-label">Play the music</span></button>
-<h2 class="label" style="font-family: Inter, sans-serif; margin-top: 2em">What am I hearing?</h2>
-<p class="muted" style="margin-top: .6em">Each star in this Hubble image becomes a note. Stars farther from the center sound higher. [Caption placeholder: add your own words here.]</p>
-<p class="muted" style="font-size: .8em; margin-top: 1em">Video and sonification: NASA Scientific Visualization Studio. Hubble imagery. <a href="https://svs.gsfc.nasa.gov/13786/" target="_blank" rel="noopener">Source<span class="sr"> (opens in a new tab)</span></a></p>
+<p id="music-msg" class="muted" role="status" style="font-size: .9em; margin-top: .8em" hidden>Sound is blocked. Tap the button again to turn it on.</p>
+<p class="vhero-cap">Each star in this Hubble image becomes a note. Stars farther from the center sound higher. <span class="vhero-credit">Video and sonification: NASA Scientific Visualization Studio · <a href="https://svs.gsfc.nasa.gov/13786/" target="_blank" rel="noopener">SVS 13786<span class="sr"> (opens in a new tab)</span></a></span></p>
 </div>
 </section>
 
-<section class="wrap" aria-label="Sections">
-<div class="g-3" style="border-top: 1px solid var(--line); padding-top: 2.5em">
-<a href="explore.html" style="text-decoration: none; color: var(--text); display: flex; flex-direction: column; gap: .7em; min-height: 48px"><span class="label">01</span><span class="serif" style="font-size: 1.9em">Explore</span><span class="muted">[One-line description placeholder]</span></a>
-<a href="play.html" style="text-decoration: none; color: var(--text); display: flex; flex-direction: column; gap: .7em; min-height: 48px"><span class="label">02</span><span class="serif" style="font-size: 1.9em">Play</span><span class="muted">[One-line description placeholder]</span></a>
-<a href="compose.html" style="text-decoration: none; color: var(--text); display: flex; flex-direction: column; gap: .7em; min-height: 48px"><span class="label">03</span><span class="serif" style="font-size: 1.9em">Compose</span><span class="muted">[One-line description placeholder]</span></a>
+<section class="wrap" style="padding-top: 5em" aria-labelledby="impact-h">
+<div style="display: flex; flex-direction: column; gap: .8em; max-width: 40em; margin-bottom: 2.5em">
+<p class="label">Who it is for</p>
+<h2 id="impact-h" style="font-size: 2.4em">Science data should not need eyes.</h2>
+<p class="muted" style="font-size: 1.05em">NASA's Earth data is mostly shown as pictures. Turning it into sound opens it to people who cannot see the picture, and it makes every visitor listen more closely.</p>
+</div>
+<div class="impact">
+<div><p class="stat" data-count="2.2" data-suffix=" billion">2.2 billion</p><p>people live with a vision impairment, near or distance.</p><p class="src"><a href="https://www.who.int/news-room/fact-sheets/detail/blindness-and-visual-impairment" target="_blank" rel="noopener">WHO<span class="sr"> (opens in a new tab)</span></a></p></div>
+<div><p class="stat" data-count="1.3" data-suffix=" billion">1.3 billion</p><p>people, about 1 in 6, live with a significant disability.</p><p class="src"><a href="https://www.who.int/news-room/fact-sheets/detail/disability-and-health" target="_blank" rel="noopener">WHO<span class="sr"> (opens in a new tab)</span></a></p></div>
+<div><p class="stat" data-count="9" data-suffix="">9</p><p>real NASA visualizations are already in the catalog below, from night lights to lightning.</p><p class="src"><a href="https://svs.gsfc.nasa.gov/" target="_blank" rel="noopener">NASA SVS<span class="sr"> (opens in a new tab)</span></a></p></div>
 </div>
 </section>
+
+<section class="wrap" style="padding-top: 5em" aria-labelledby="win-h">
+<h2 id="win-h" class="label" style="font-family: Inter, sans-serif; margin-bottom: 1.6em">Why it works</h2>
+<div class="why">
+<div><p class="serif" style="font-size: 1.5em">Everyone can use it</p><p class="muted">An audio-first mode with keyboard control, captions, large text and high contrast.</p></div>
+<div><p class="serif" style="font-size: 1.5em">Real NASA data</p><p class="muted">Every sound comes from a NASA Scientific Visualization Studio dataset.</p></div>
+<div><p class="serif" style="font-size: 1.5em">Learn by playing</p><p class="muted">Games and a composer teach people to hear patterns in Earth's data.</p></div>
+<div><p class="serif" style="font-size: 1.5em">Ready for a museum</p><p class="muted">Works on a kiosk with touch, keyboard or hands-free camera control.</p></div>
+</div>
+</section>
+
+
 
 <section class="wrap" style="padding-top: 5em" aria-labelledby="af-h">
 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(20em, 1fr)); gap: 3em; border-top: 1px solid var(--line); padding-top: 2.5em">

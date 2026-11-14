@@ -55,7 +55,7 @@ function buildHeader() {
   var middle = isAudio
     ? '<a class="btn" href="index.html">' + ICONS.arrowLeft + 'Exit audio-first mode</a>'
     : '<nav aria-label="Main sections"><ul class="tabs">' +
-      tabLink('explore.html', 'Explore', 'explore') +
+      tabLink('index.html', 'Explore', 'explore') +
       tabLink('play.html', 'Play', 'play') +
       tabLink('compose.html', 'Compose', 'compose') + '</ul></nav>';
 
