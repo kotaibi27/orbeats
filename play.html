@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ORBEATS — Play</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,300;6..72,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body data-page="play" data-np-title="Air Tiles · [track placeholder]">
+<div class="app" id="app">
+<div id="site-header"></div>
+<main id="main" tabindex="-1">
+
+<div class="wrap" style="padding-top: 4.5em">
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 1.5em; padding-bottom: 2.5em; border-bottom: 1px solid var(--line); margin-bottom: 2.5em">
+<div style="display: flex; flex-direction: column; gap: .9em">
+<p class="label">02 · Play</p>
+<h1 style="font-size: 3.4em">Play</h1>
+<p class="muted" style="font-size: 1.1em">[One-line subtitle placeholder]</p>
+</div>
+<div style="display: flex; align-items: center; gap: 1.2em">
+<div style="text-align: right"><p>Game mode</p><p class="muted" style="font-size: .85em" id="mode-hint">Score, timer and streaks</p></div>
+<button class="switch" id="mode-switch" role="switch" aria-checked="true" aria-label="Game mode"><span class="track" aria-hidden="true"></span><span class="state" id="mode-state">On</span></button>
+</div>
+</div>
+
+<section aria-labelledby="gp-h">
+<h2 id="gp-h" class="label" style="font-family: Inter, sans-serif; margin-bottom: 1.2em">Games</h2>
+<!-- The three game cards are built by js/play.js. Rename the games in the GAMES list there. -->
+<div class="g-3" id="games"></div>
+</section>
+
+<section aria-labelledby="ctl-h" style="display: flex; flex-wrap: wrap; align-items: center; gap: 1em 1.5em; margin-top: 3.5em">
+<h2 id="ctl-h" class="label" style="font-family: Inter, sans-serif">Controls</h2>
+<div class="seg" role="radiogroup" aria-labelledby="ctl-h" id="controls"></div>
+<p class="muted" style="font-size: .85em" id="control-note" aria-live="polite"></p>
+</section>
+
+<!-- Empty on purpose: the game goes in the game stage. -->
+<div class="g-main" style="margin-top: 2em">
+<section aria-label="Game stage" class="zone zone-c" style="min-height: 34em">[Game stage: placeholder]</section>
+<aside aria-label="Score and feedback" class="zone" style="min-height: 34em">[Score and feedback area]</aside>
+</div>
+</div>
+
+</main>
+<div id="site-footer"></div>
+</div>
+<script src="js/shared.js"></script>
+<script src="js/play.js"></script>
+</body>
+</html>

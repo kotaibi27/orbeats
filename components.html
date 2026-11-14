@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ORBEATS — Component set</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,300;6..72,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body data-page="components" data-np-title="[Track title]">
+<div class="app" id="app">
+<div id="site-header"></div>
+<main id="main" tabindex="-1">
+
+<div class="wrap" style="padding-top: 4.5em; display: flex; flex-direction: column; gap: 3.5em">
+<div style="display: flex; flex-direction: column; gap: .9em"><p class="label">Template</p><h1 style="font-size: 3.4em">Component set</h1><p class="muted">Space palette, hairline structure, one accent.</p></div>
+
+<section aria-labelledby="c1" style="border-top: 1px solid var(--line); padding-top: 1.6em"><h2 id="c1" class="label" style="font-family: Inter, sans-serif; margin-bottom: 1.4em">Color</h2>
+<div id="swatches" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(9em, 1fr)); gap: 1.5em"></div></section>
+
+<section aria-labelledby="c2" style="border-top: 1px solid var(--line); padding-top: 1.6em"><h2 id="c2" class="label" style="font-family: Inter, sans-serif; margin-bottom: 1.4em">Type</h2>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(18em, 1fr)); gap: 2.5em">
+<div><p class="muted" style="font-size: .8em">Headings · Newsreader Light</p><p class="serif" style="font-size: 3.2em">Listen to a changing planet.</p></div>
+<div><p class="muted" style="font-size: .8em">Body and UI · Inter Regular</p><p style="font-size: 1.1em">Body text at 17 px with 1.65 line height. Scales to 21 and 26 px on kiosk displays, and up to 160% with the text-size control.</p><p class="label" style="margin-top: 1em">Uppercase label · wide tracking</p></div>
+</div></section>
+
+<section aria-labelledby="c3" style="border-top: 1px solid var(--line); padding-top: 1.6em"><h2 id="c3" class="label" style="font-family: Inter, sans-serif; margin-bottom: 1.4em">Controls</h2>
+<div style="display: flex; flex-wrap: wrap; gap: 1.2em 1.5em; align-items: center">
+<button class="btn btn-primary">Primary<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></button>
+<button class="btn">Secondary</button>
+<button class="btn btn-icon btn-primary" aria-label="Play"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4.5v15l12.5-7.5z"></path></svg></button>
+<button class="switch" id="demo-switch" role="switch" aria-checked="true"><span class="track" aria-hidden="true"></span><span class="state" id="demo-state">On</span><span>Switch</span></button>
+<button class="tool" aria-pressed="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="3"></rect><path d="M10.5 10.2a2.5 2.5 0 1 0 0 3.6M17 10.2a2.5 2.5 0 1 0 0 3.6"></path></svg><span>Toolbar toggle</span><span class="state">On</span></button>
+<a class="tab" href="#" aria-current="page">Active tab</a><a class="tab" href="#">Tab</a>
+</div>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(16em, 1fr)); gap: 2em; margin-top: 2em; align-items: center">
+<div><label for="cs" style="display: flex; justify-content: space-between"><span>Slider</span><span class="muted" id="cs-val">60</span></label><input id="cs" type="range" min="0" max="100" value="60"></div>
+<div><p class="muted" style="font-size: .8em; margin-bottom: .5em">Level meter (now-playing bar only)</p><div class="meter" aria-hidden="true"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></div>
+<div class="zone" style="min-height: 6em">[Placeholder region]</div>
+</div></section>
+</div>
+
+</main>
+<div id="site-footer"></div>
+</div>
+<script src="js/shared.js"></script>
+<script src="js/components.js"></script>
+</body>
+</html>
