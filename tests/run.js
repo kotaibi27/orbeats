@@ -111,15 +111,15 @@ async function keyboardTest(browser, url) {
   await page.keyboard.press('r'); await waitState(page, 'listening'); await waitState(page, 'choosing');
   s = await state(page);
   check('Relaxed timing gives 3x more time', s.timeLeft > 80, s.timeLeft + ' s');
-  await page.click('#mode-switch');
+  await page.click('#game-mode');
   check('Game mode off hides score and timer', await page.isHidden('#gy-scorebox') && await page.isVisible('#gy-free'));
   await page.click('[data-game="0"]');
   s = await state(page);
   check('game switch off stops the game', s.state === 'idle' && await page.isVisible('#gy-off') && await page.isHidden('#gy-body'));
   await page.click('[data-game="0"]');
-  await page.click('#text-bigger'); await page.click('#btn-hc');
+  await page.click('[data-action="text-bigger"]'); await page.click('[data-setting="hc"]');
   check('text size and high contrast apply to the game', await page.evaluate(() => document.getElementById('app').classList.contains('hc') && document.getElementById('app').style.fontSize.includes('1.15')));
-  await page.click('#btn-cc');
+  await page.click('[data-setting="cc"]'); await page.waitForTimeout(50);
   check('captions off hides the caption but keeps it for screen readers', await page.evaluate(() => document.getElementById('game-caption').classList.contains('sr')));
   check('caption is an ARIA live region', await page.getAttribute('#game-caption', 'aria-live') !== null);
   check('no page errors', page.errors.length === 0, page.errors.join(' | '));
