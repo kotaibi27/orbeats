@@ -4,18 +4,21 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>ORBEATS — Home</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,300;6..72,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/style.css">
 </head>
-<body data-page="home" data-np-title="Lightning Events Detected from the ISS, 2017 to 2023">
+<body class="has-video" data-page="home" data-np-title="Data Sonification: Caldwell 73" data-np-caption="Stars become notes. Farther from the center, higher pitch.">
+<div class="bg-video" aria-hidden="true">
+<video id="bg-video" autoplay muted loop playsinline preload="auto">
+<source src="media/caldwell73.webm" type="video/webm">
+<source src="https://svs.gsfc.nasa.gov/vis/a010000/a013700/a013786/Caldwell73_2K_Final.webm" type="video/webm">
+</video>
+<div class="bg-scrim"></div>
+</div>
 <div class="app" id="app">
 <div id="site-header"></div>
 <main id="main" tabindex="-1">
 
-<section class="wrap" style="padding-top: 3.5em" aria-labelledby="hero-h">
-<div class="hero">
+<section class="wrap home-hero" aria-labelledby="hero-h">
 <div class="hero-head">
 <div style="display: flex; flex-direction: column; gap: .5em">
 <h1 id="hero-h" class="hero-mark">ORBEATS</h1>
@@ -27,75 +30,11 @@
 </div>
 </div>
 
-<div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: .4em 1.5em; margin: 2.6em 0 .9em">
-<p class="muted" style="font-size: .88em">Drag to rotate. Use the panel inside the viewer to change layers.</p>
-<a href="#after-sun" style="display: inline-flex; align-items: center; min-height: 44px; font-size: .88em">Skip the Sun viewer</a>
-</div>
-
-<!-- The live Sun viewer. To swap it, change the src below. -->
-<div class="sun" id="sun-live" role="region" aria-label="Interactive live view of the Sun" style="position: relative; width: 100%; border: 1px solid var(--line); border-radius: 12px; overflow: hidden; background: #03060C">
-<iframe id="sun-frame" title="Interactive live view of the Sun" src="https://astrodavid10.github.io/sol-solar-viewer/" loading="lazy" style="position: absolute; inset: 0; width: 100%; height: 100%; border: 0"></iframe>
-</div>
-
-<!-- Shown only when the viewer cannot load (for example, no internet). -->
-<div class="sun" id="sun-down" hidden role="region" aria-label="Live view unavailable" style="width: 100%; border: 1px solid var(--line); border-radius: 12px; background: var(--panel); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1.2em; text-align: center; padding: 2em">
-<p style="font-size: 1.2em">The live view is unavailable.</p>
-<div class="zone zone-c" style="width: min(100%, 26em); aspect-ratio: 16 / 9">[Fallback image placeholder]</div>
-<a href="https://astrodavid10.github.io/sol-solar-viewer/" target="_blank" rel="noopener" style="display: inline-flex; align-items: center; min-height: 48px">Open the Sun viewer in a new tab<span class="sr"> (opens in a new tab)</span></a>
-</div>
-
-<p id="after-sun" tabindex="-1" class="muted" style="font-size: .85em; margin-top: .9em">Live view of the Sun. Source: [placeholder, Sol viewer]. Imagery: NASA Solar Dynamics Observatory. <a href="https://astrodavid10.github.io/sol-solar-viewer/" target="_blank" rel="noopener">Open in a new tab<span class="sr"> (opens in a new tab)</span></a></p>
-</div>
-</section>
-
-<section class="wrap" style="padding-top: 3.5em" aria-labelledby="look-h">
-<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(18em, 1fr)); gap: 1em 3em; border-top: 1px solid var(--line); padding-top: 2em">
-<h2 id="look-h" style="font-size: 1.9em">What am I looking at?</h2>
-<p class="muted" style="font-size: 1.05em; max-width: 38em">[Plain-language description placeholder, line one: what the Sun viewer shows.] [Line two: what the lines and labels mean.] [Line three: why it matters on Earth.]</p>
-</div>
-</section>
-
-<section class="wrap" style="padding-top: 3em; padding-bottom: 5em" aria-labelledby="status-h">
-<div style="border-top: 1px solid var(--line); padding-top: 1.6em">
-<div style="display: flex; flex-wrap: wrap; align-items: center; gap: .6em 1.4em; margin-bottom: 1.6em">
-<h2 id="status-h" class="label" style="font-family: Inter, sans-serif">Live status</h2>
-<span style="display: inline-flex; align-items: center; gap: .5em; font-size: .85em" aria-hidden="true"><span class="live-dot" id="live-dot"></span><span id="live-word">Live</span></span>
-<span class="muted" style="font-size: .85em" id="updated-text" aria-hidden="true"></span>
-<span class="sr" id="updated-sr"></span>
-</div>
-
-<!-- These four readouts show sample values that move. Replace them with real data later (see js/home.js). -->
-<div class="status-row" aria-live="polite">
-<div class="ro">
-<p class="label" aria-hidden="true">Solar flare activity</p>
-<p class="big" aria-hidden="true" style="display: flex; align-items: center; gap: .35em"><span class="dot" id="flare-dot"></span><span id="flare-word"></span></p>
-<p class="sub" aria-hidden="true">&#160;</p>
-<span class="sr" id="flare-sr"></span>
-<div class="ro-foot"><span class="sample">[Sample value]</span><button class="sonify" aria-label="Sonify solar flare activity [placeholder]">[Sonify this reading]</button></div>
-</div>
-<div class="ro">
-<p class="label" aria-hidden="true">Solar wind speed</p>
-<p class="big" aria-hidden="true"><span id="wind-num"></span><span class="unit" id="wind-unit">km/s</span></p>
-<svg class="spark" id="spark" viewBox="0 0 120 22" preserveAspectRatio="none" aria-hidden="true"><polyline id="spark-line" points="" fill="none" stroke="#7FC8F8" stroke-opacity=".8" stroke-width="1"></polyline></svg>
-<p class="sub" id="wind-sub" aria-hidden="true" hidden></p>
-<span class="sr" id="wind-sr"></span>
-<div class="ro-foot"><span class="sample">[Sample value]</span><button class="sonify" aria-label="Sonify solar wind speed [placeholder]">[Sonify this reading]</button></div>
-</div>
-<div class="ro">
-<p class="label" aria-hidden="true">Aurora activity</p>
-<p class="big" aria-hidden="true" style="display: flex; align-items: center; gap: .35em"><span class="dot" id="aurora-dot"></span><span id="aurora-word"></span></p>
-<p class="sub" id="kp-text" aria-hidden="true"></p>
-<span class="sr" id="aurora-sr"></span>
-<div class="ro-foot"><span class="sample">[Sample value]</span><button class="sonify" aria-label="Sonify aurora activity [placeholder]">[Sonify this reading]</button></div>
-</div>
-<div class="ro">
-<p class="label" aria-hidden="true">Sunspots</p>
-<p class="big" aria-hidden="true" id="spots-num"></p>
-<p class="sub" id="regions-text" aria-hidden="true"></p>
-<span class="sr" id="spots-sr"></span>
-<div class="ro-foot"><span class="sample">[Sample value]</span><button class="sonify" aria-label="Sonify sunspots [placeholder]">[Sonify this reading]</button></div>
-</div>
-</div>
+<div class="hearing">
+<button class="btn" id="music-btn" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4z"></path><path d="M15.5 8.5a5 5 0 0 1 0 7"></path></svg><span id="music-label">Play the music</span></button>
+<h2 class="label" style="font-family: Inter, sans-serif; margin-top: 2em">What am I hearing?</h2>
+<p class="muted" style="margin-top: .6em">Each star in this Hubble image becomes a note. Stars farther from the center sound higher. [Caption placeholder: add your own words here.]</p>
+<p class="muted" style="font-size: .8em; margin-top: 1em">Video and sonification: NASA Scientific Visualization Studio. Hubble imagery. <a href="https://svs.gsfc.nasa.gov/13786/" target="_blank" rel="noopener">Source<span class="sr"> (opens in a new tab)</span></a></p>
 </div>
 </section>
 

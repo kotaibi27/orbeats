@@ -7,7 +7,7 @@ var COLORS = [
   { hex: '#E8EDF5', name: 'Starlight', use: 'Text', dark: true },
   { hex: '#9AA6BA', name: 'Slate', use: 'Secondary text', dark: true },
   { hex: '#7FC8F8', name: 'Ice blue', use: 'Active, focus, highlights', dark: true },
-  { hex: '#E0A458', name: 'Solar amber', use: 'Sparing secondary', dark: true }
+  { hex: '#E0A458', name: 'Amber', use: 'Sparing secondary', dark: true }
 ];
 
 var swatchHtml = '';

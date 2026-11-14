@@ -18,11 +18,11 @@ Option 2 (local server): open a terminal in this folder and run
 
 then open http://localhost:8000 in a browser. Use this if you plan to load data files with fetch(), because browsers block that when a page is opened as a file.
 
-Internet is needed for two things: the fonts (Newsreader and Inter from Google Fonts) and the live Sun viewer on the home page. Without internet the page still works, with fallback fonts and a fallback message instead of the Sun viewer.
+Fonts are bundled in `fonts/`, so they work offline. The home page background video streams from NASA (internet needed). To make it work offline too, download `Caldwell73_2K_Final.webm` from https://svs.gsfc.nasa.gov/13786/ and save it as `media/caldwell73.webm`; the page uses that copy first.
 
 ## What is in the repo
 
-    index.html          Home page (Sun viewer, live status row, data catalog)
+    index.html          Home page (video background with music, data catalog)
     explore.html        Tab 1: Explore (empty content area for us to fill)
     play.html           Tab 2: Play (game on/off switches, game mode, controls)
     compose.html        Tab 3: Compose (empty content area for us to fill)
@@ -30,7 +30,7 @@ Internet is needed for two things: the fonts (Newsreader and Inter from Google F
     components.html     Colors, type and controls reference
     css/style.css       All styles
     js/shared.js        Header, footer, now-playing bar, accessibility toolbar, data catalog
-    js/home.js          Home page: catalog list and the moving status values
+    js/home.js          Home page: catalog list, background video and music button
     js/play.js          Play page switches and controls
     js/audio-first.js   Audio-first mode tracks and keyboard shortcuts
     js/components.js    Component set page
@@ -45,14 +45,11 @@ Internet is needed for two things: the fonts (Newsreader and Inter from Google F
 
 ## Things to know
 
-- The values in the home page status row are sample values that move on their own. They are marked "[Sample value]". Replace the `refresh()` function in `js/home.js` with real data when ready.
-- The Sun viewer on the home page is an embedded third-party page (https://astrodavid10.github.io/sol-solar-viewer/). Check that its creator is happy with the embed and credit them.
 - The Play and Now playing buttons do not make sound yet. They only switch the state and animation. Audio comes next.
 - The accessibility toolbar settings (text size, contrast, audio, captions) are remembered while moving between pages.
-- Add `?data=down` to the home page address to preview the "data unavailable" look.
 
 ## Credits
 
-Data and visualizations: NASA Scientific Visualization Studio (https://svs.gsfc.nasa.gov/). Sun imagery: NASA Solar Dynamics Observatory. This is not an official NASA product.
+Data, video and sonification: NASA Scientific Visualization Studio (https://svs.gsfc.nasa.gov/, SVS 13786, Caldwell 73, Hubble imagery). This is not an official NASA product.
 
 The original design lives in the Claude Design file: https://claude.ai/artifact/Gx81G4nvM9z1FzZ2nvYGay
