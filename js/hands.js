@@ -16,7 +16,7 @@
 //   HandEngine.stop();       // turns the camera off
 //   HandEngine.calibrate();  // short spoken calibration, returns a Promise
 //
-// Needs js/shared.js and js/voice.js to be loaded first.
+// Needs js/app.js and js/voice.js to be loaded first.
 
 var HandEngine = (function () {
 

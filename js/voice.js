@@ -2,7 +2,10 @@
 // - say(text)      speaks the text aloud AND shows it as a live caption
 // - beep(...)      plays one short tone
 // - getAudio()     the shared Web Audio context (created on the first click, as browsers require)
-// Everything respects the Audio and Captions buttons in the accessibility bar (js/shared.js).
+// Everything respects the Audio and Captions buttons in the accessibility bar (js/app.js).
+
+// The accessibility settings (audio on/off, captions on/off...) live in js/app.js.
+var settings = ORBEATS.settings;
 
 var voice = {
   ctx: null,       // the AudioContext
@@ -101,11 +104,15 @@ function wait(ms) {
   return new Promise(function (resolve) { setTimeout(resolve, voice.fast ? Math.min(ms, 40) : ms); });
 }
 
-// Keep the volume in step with the accessibility bar and the volume slider.
-onSettingsChange(function () {
+// Keep the volume and captions in step with the accessibility bar and the volume slider.
+function applySettings() {
   updateMasterVolume();
   if (!settings.audio) stopSpeaking();
   var box = document.getElementById('game-caption');
   if (box) box.classList.toggle('sr', !settings.cc);   // Captions off: hidden on screen, still read by screen readers
+}
+// js/app.js changes the settings when a toolbar button is clicked. We look right after the click.
+document.querySelectorAll('[data-setting]').forEach(function (button) {
+  button.addEventListener('click', function () { setTimeout(applySettings, 0); });
 });
 document.getElementById('np-vol').addEventListener('input', updateMasterVolume);
