@@ -33,8 +33,20 @@ function startServer() {
   return new Promise(resolve => server.listen(0, () => resolve(server)));
 }
 
-const state = page => page.evaluate(() => ({ state: game.state, round: game.round, score: game.score, streak: game.streak, answer: game.answer, options: game.options, chosen: game.chosen, dataset: game.dataset, timeLeft: game.timeLeft, control: play.control, caption: document.getElementById('game-caption').textContent }));
-const waitState = (page, name) => page.waitForFunction(n => game.state === n, name, { timeout: 15000 });
+const state = page => page.evaluate(() => ({ state: game.state, hits: game.hits, misses: game.misses, score: game.score, streak: game.streak, wrong: game.wrongLane, dataset: game.dataset, control: play.control, handLane: game.handLane, tiles: game.tiles.map(t => ({ lane: t.lane, state: t.state, time: t.time })), caption: document.getElementById('game-caption').textContent }));
+const waitState = (page, name) => page.waitForFunction(n => game.state === n, name, { timeout: 20000 });
+// wait until tile number i is `lead` ms away from the line (checked every animation frame)
+const waitTile = (page, i, lead) => page.waitForFunction(([n, l]) => performance.now() >= game.tiles[n].time - l, [i, lead || 0], { polling: 'raf', timeout: 20000 });
+// let the page play every remaining tile by itself (sends real keydown events at the right moment)
+const autoPlay = page => page.evaluate(() => {
+  const loop = () => {
+    if (game.state !== 'playing') return;
+    const now = performance.now();
+    game.tiles.forEach(t => { if (t.state === 'wait' && now >= t.time && !t.auto) { t.auto = true; document.dispatchEvent(new KeyboardEvent('keydown', { key: String(t.lane + 1), bubbles: true })); } });
+    requestAnimationFrame(loop);
+  };
+  loop();
+});
 
 async function newPage(browser, url, options) {
   const context = await browser.newContext(options || {});
@@ -52,70 +64,68 @@ async function keyboardTest(browser, url) {
   console.log('Keyboard-only path');
   const page = await newPage(browser, url);
   await page.keyboard.press('Tab');                 // real key presses only, no mouse
-  await page.focus('#gy-stage');
-  await page.keyboard.press('Enter');
-  await waitState(page, 'choosing');
+  await page.focus('#at-stage');
+  await page.keyboard.press('3');                   // before the song a lane only plays its note
   let s = await state(page);
-  check('game starts and reaches round 1', s.round === 1 && s.options.length === 4, 'round ' + s.round);
-  check('caption lists the options', /Option 1/.test(s.caption));
-
+  check('a lane key before the song does nothing to the game', s.state === 'idle' && s.hits === 0);
   await page.keyboard.press('Enter');
+  await waitState(page, 'playing');
   s = await state(page);
-  check('Enter with no choice does not lock in', s.state === 'choosing' && /Choose an option first/.test(s.caption));
+  check('Enter starts a song of 24 tiles from two years', s.tiles.length === 24 && (await page.evaluate(() => game.years[1] - game.years[0])) === 1, s.tiles.length + ' tiles');
+  check('tiles use all lanes in range', s.tiles.every(t => t.lane >= 0 && t.lane <= 3));
 
-  await page.keyboard.press('r');
-  await waitState(page, 'listening'); await waitState(page, 'choosing');
-  check('R repeats the sound', true);
-
-  // round 1: answer correctly
-  await page.keyboard.press(String(s.options.indexOf(s.answer) + 1));
+  // tile 0: hit with the right key
+  await waitTile(page, 0, 20);
+  await page.keyboard.press(String(s.tiles[0].lane + 1));
   s = await state(page);
-  check('number key chooses an option', s.chosen === s.options.indexOf(s.answer));
-  check('chosen option is marked in text, not only color', await page.textContent('.opt[aria-pressed="true"] .opt-note') === 'Chosen');
-  await page.keyboard.press('Enter');
-  await page.waitForFunction(() => game.round === 2 && game.state === 'choosing', null, { timeout: 15000 });
-  s = await state(page);
-  check('correct answer scores a point', s.score === 1 && s.streak === 1, 'score ' + s.score);
+  check('the right lane key hits the tile', s.tiles[0].state === 'hit' && s.hits === 1 && s.score >= 60, 'score ' + s.score);
 
-  // round 2: answer wrongly
-  const wrong = s.options.findIndex(y => y !== s.answer);
-  await page.keyboard.press(String(wrong + 1));
-  await page.keyboard.press('Enter');
-  await page.waitForFunction(() => /Not quite/.test(window.__captions.join(' ')) || true);
-  await page.waitForFunction(() => game.round === 3 && game.state === 'choosing', null, { timeout: 15000 });
+  // tile 1: the wrong lane breaks the streak and leaves the tile in play
+  await waitTile(page, 1, 20);
+  await page.keyboard.press(String((s.tiles[1].lane + 1) % 4 + 1));
   s = await state(page);
-  check('wrong answer keeps the score and resets the streak', s.score === 1 && s.streak === 0);
+  check('the wrong lane resets the streak', s.wrong === 1 && s.streak === 0 && s.tiles[1].state === 'wait');
+  await page.waitForFunction(() => game.tiles[1].state === 'miss', null, { timeout: 5000 });
+  check('a tile that is not hit becomes a miss', (await state(page)).misses === 1);
 
-  // round 3: skip.  round 4: change dataset.  then finish
-  await page.keyboard.press('n');
-  await page.waitForFunction(() => game.round === 4 && game.state === 'choosing', null, { timeout: 15000 });
-  check('N skips the round', true);
-  await page.keyboard.press('ArrowRight');
-  await page.waitForFunction(() => game.dataset === 1 && game.round === 4 && game.state === 'choosing', null, { timeout: 15000 });
-  check('right arrow changes the dataset and restarts the round', true);
-  for (let r = 4; r <= 5; r++) {
-    await page.waitForFunction(n => game.round === n && game.state === 'choosing', r, { timeout: 15000 });
-    await page.keyboard.press('1'); await page.keyboard.press('Enter');
-  }
+  await autoPlay(page);
   await waitState(page, 'over');
+  await page.waitForFunction(() => /made from/.test(window.__captions.join(' ')), null, { timeout: 10000 });
   s = await state(page);
-  check('game ends after 5 rounds with a spoken score', /out of 5/.test(s.caption), s.caption.slice(0, 60));
-  check('progress shows round 5 of 5', (await page.textContent('#gy-round')) === 'Round 5 of 5');
+  check('song ends with a spoken score', /You hit \d+ of 24 tiles/.test(await page.evaluate(() => window.__captions.join(' '))));
+  check('then says which data made the melody', /made from/.test(await page.evaluate(() => window.__captions.join(' '))));
+  check('progress shows all tiles played', (await page.textContent('#at-round')) === '24 of 24 tiles played');
   await page.keyboard.press('Enter');
-  await waitState(page, 'choosing');
+  await waitState(page, 'playing');
   s = await state(page);
-  check('Enter plays again', s.round === 1 && s.score === 0);
+  check('Enter plays again with a fresh score', s.hits === 0 && s.score === 0);
+  await page.keyboard.press('Escape');
+  s = await state(page);
+  check('Escape stops the song', s.state === 'idle');
+  await page.keyboard.press('ArrowRight');
+  s = await state(page);
+  check('right arrow changes the dataset', s.dataset === 1);
+  await page.keyboard.press('ArrowLeft');
+
+  // touch: tapping a lane button hits
+  await page.focus('#at-stage'); await page.keyboard.press('Enter'); await waitState(page, 'playing');
+  s = await state(page);
+  await waitTile(page, 0, 20);
+  await page.click('#at-lanes button[data-lane="' + s.tiles[0].lane + '"]');
+  check('tapping the lane button hits', (await state(page)).hits === 1);
+  await page.keyboard.press('Escape');
 
   // switches
   await page.click('#relaxed-switch');
-  await page.keyboard.press('r'); await waitState(page, 'listening'); await waitState(page, 'choosing');
-  s = await state(page);
-  check('Relaxed timing gives 3x more time', s.timeLeft > 80, s.timeLeft + ' s');
+  await page.focus('#at-stage'); await page.keyboard.press('Enter'); await waitState(page, 'playing');
+  const gap = await page.evaluate(() => game.tiles[1].time - game.tiles[0].time);
+  check('Relaxed timing slows the song down', Math.abs(gap - 675) < 2, gap + ' ms between tiles');
+  await page.keyboard.press('Escape');
   await page.click('#game-mode');
-  check('Game mode off hides score and timer', await page.isHidden('#gy-scorebox') && await page.isVisible('#gy-free'));
+  check('Game mode off hides the score and shows free play', await page.isHidden('#at-scorebox') && await page.isVisible('#at-free'));
   await page.click('[data-game="0"]');
   s = await state(page);
-  check('game switch off stops the game', s.state === 'idle' && await page.isVisible('#gy-off') && await page.isHidden('#gy-body'));
+  check('game switch off hides the game', s.state === 'idle' && await page.isVisible('#at-off') && await page.isHidden('#at-body'));
   await page.click('[data-game="0"]');
   await page.click('[data-action="text-bigger"]'); await page.click('[data-setting="hc"]');
   check('text size and high contrast apply to the game', await page.evaluate(() => document.getElementById('app').classList.contains('hc') && document.getElementById('app').style.fontSize.includes('1.15')));
@@ -136,8 +146,8 @@ async function deniedTest(browser, url) {
   check('falls back to keyboard automatically', s.control === 'keyboard');
   check('says so in the caption', /keyboard and touch/.test(s.caption), s.caption.slice(0, 70));
   check('camera panel is hidden again', await page.isHidden('#camera-box'));
-  await page.focus('#gy-stage'); await page.keyboard.press('Enter');
-  await waitState(page, 'choosing');
+  await page.focus('#at-stage'); await page.keyboard.press('Enter');
+  await waitState(page, 'playing');
   check('game is still playable by keyboard', true);
   check('no page errors', page.errors.length === 0, page.errors.join(' | '));
   await page.context().close();
@@ -206,38 +216,34 @@ async function gestureTest(browser, url) {
   e = await events();
   check('hand lost event', e.includes('hand:{"present":false}'));
 
-  // Play one round with the hand only: raise fingers to choose, pinch and hold to lock in
-  await page.evaluate(() => stopGame());     // the pinch test above already started a game: begin fresh
-  await page.evaluate(() => hold({ fingers: 1 }, 500).then(() => hold({ fingers: 1, pinch: true }, 400)));   // pinch starts the game
-  await waitState(page, 'choosing');
-  await page.evaluate(() => hold({ fingers: 1 }, 300));
+  // Play with the hand only: pinch starts the song, move into a lane, pinch to hit
+  await page.evaluate(() => stopGame());     // the pinch test above already started a song: begin fresh
+  await page.evaluate(() => hold({ fingers: 1, x: 0.9 }, 500));
   let s = await state(page);
-  const want = s.options.indexOf(s.answer) + 1;
-  await page.evaluate(n => hold({ fingers: n }, 700), want);
+  check('hand position picks a lane (right side = lane 4)', s.handLane === 3, 'lane ' + s.handLane);
+  await page.evaluate(() => hold({ fingers: 1, x: 0.1 }, 500));
   s = await state(page);
-  check('raising fingers chooses the option', s.chosen === want - 1, 'chosen ' + s.chosen);
-  await page.evaluate(n => hold({ fingers: n, pinch: true }, 500), want);
-  await page.waitForFunction(() => game.round === 2 && game.state === 'choosing', null, { timeout: 15000 });
+  check('hand position picks a lane (left side = lane 1)', s.handLane === 0, 'lane ' + s.handLane);
+  await page.evaluate(() => hold({ fingers: 1 }, 300).then(() => hold({ fingers: 1, pinch: true }, 400)));   // pinch starts the song
+  await waitState(page, 'playing');
+  check('pinch starts the song', true);
+  await page.evaluate(() => hold({ fingers: 1, x: 0.5 }, 300));       // pinch is over: hand is open again
   s = await state(page);
-  check('pinch and hold locks it in and scores', s.score === 1);
-
-  // open palm repeats, fist skips, swipe changes dataset
-  await page.evaluate(() => hold({ fingers: 4, thumbOut: true }, 900));
-  await waitState(page, 'choosing');
-  check('open palm repeats the sound', (await page.evaluate(() => window.__captions.includes('Again.'))));
+  const lane0 = s.tiles[1].lane;        // tile 1: by now tile 0 has already gone past
+  await page.evaluate(n => hold({ fingers: 1, x: (n + 0.5) / 4 }, 250), lane0);
+  await waitTile(page, 1, 150);
+  await page.evaluate(n => hold({ fingers: 1, x: (n + 0.5) / 4, pinch: true }, 300), lane0);
+  s = await state(page);
+  check('moving into the lane and pinching hits the tile', s.tiles[1].state === 'hit', 'tile 1: ' + s.tiles[1].state + ', lane ' + lane0 + ', hand lane ' + s.handLane);
+  const before = (await state(page)).dataset;
+  await page.evaluate(() => hold({ fingers: 4, x: 0.2 }, 1500).then(() => hold(t => ({ fingers: 4, x: 0.2 + 0.6 * t }), 350)));
+  check('swiping during a song does not change the dataset', (await state(page)).dataset === before);
   await page.evaluate(() => hold({ fingers: 0 }, 900));
-  await page.waitForFunction(() => game.round === 3 && game.state === 'choosing', null, { timeout: 15000 });
-  check('fist skips the round', true);
-  await page.evaluate(() => hold({ fingers: 4, x: 0.5 }, 1500).then(() => hold(t => ({ fingers: 4, x: 0.5 - 0.4 * t }), 350)));
-  await page.waitForFunction(() => game.dataset === 1, null, { timeout: 15000 });
-  check('swipe changes the dataset', true);
-
-  // zone style
-  await page.waitForFunction(() => game.state === 'choosing', null, { timeout: 15000 });
-  await page.evaluate(() => { game.handStyle = 'zones'; });
-  await page.evaluate(() => hold({ fingers: 4, y: 0.1 }, 1200));
   s = await state(page);
-  check('hand height chooses by zone (bottom = option 4)', s.chosen === 3, 'chosen ' + s.chosen);
+  check('a held fist stops the song', s.state === 'idle', s.state);
+  await page.evaluate(() => hold({ fingers: 4, x: 0.5 }, 1500).then(() => hold(t => ({ fingers: 4, x: 0.5 - 0.4 * t }), 350)));
+  await page.waitForFunction(b => game.dataset !== b, before, { timeout: 15000 });
+  check('swipe between songs changes the dataset', true);
   check('no page errors', page.errors.length === 0, page.errors.join(' | '));
   await page.context().close();
 }
@@ -261,7 +267,7 @@ async function cameraTest(url, video) {
   await page.waitForFunction(() => window.__hand.includes(true), null, { timeout: 30000 });
   check('a real hand is found in the video', true);
   await page.evaluate(() => { window.__long = 0; });
-  await page.focus('#gy-stage'); await page.keyboard.press('Enter');     // play while tracking, to check for freezes
+  await page.focus('#at-stage'); await page.keyboard.press('Enter');     // play while tracking, to check for freezes
   await page.waitForTimeout(13000);
   const r = await page.evaluate(() => ({ fps: HandEngine.fps, delegate: HandEngine.delegate, seen: window.__seen, lost: window.__hand.includes(false), long: window.__long, audio: voice.ctx ? voice.ctx.state : 'none' }));
   check('hand position follows movement up-down', r.seen.y1 - r.seen.y0 > 0.15, (r.seen.y1 - r.seen.y0).toFixed(2));

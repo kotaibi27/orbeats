@@ -27,8 +27,8 @@ then visit http://localhost:8000
 | `js/play.js`, `js/audio-first.js` | Page-specific behaviour |
 | `js/hands.js` | Reusable hand-tracking engine (MediaPipe, runs in the browser) |
 | `js/voice.js` | Speech and Web Audio helpers used by the games |
-| `js/games/guess-year.js` | Game 1, Guess the Year |
-| `js/games/guess-year-data.js` | The game's data (placeholder numbers, swap here) |
+| `js/games/air-tiles.js` | Game 1, Air Tiles |
+| `js/games/air-tiles-data.js` | The game's data (placeholder numbers, swap here) |
 | `vendor/mediapipe/` | Hand model and WASM files, stored locally (see `vendor/README.md`) |
 | `tests/run.js` | Playwright tests |
 
@@ -64,31 +64,30 @@ If the browser blocks sound, "Sound is blocked. Tap the button again to turn it 
 
 To swap the video: change the two `<source>` lines in `index.html` and `MUSIC_SRC` / `MUSIC_TITLE` in `js/app.js`.
 
-## Play tab: Guess the Year
+## Play tab: Air Tiles
 
-The player hears 10 seconds of sound made from one year of a dataset, then picks the year from 4 options. 5 rounds per game. Everything is spoken aloud and shown as captions.
+Tiles fall down four lanes. When a tile reaches the line at the bottom, hit its lane to play its note. The notes come from a NASA dataset: a bigger number is a higher, louder note and a tile further to the right. A song is two years of data in a row (24 tiles). You can play with your eyes closed, because a soft note plays in the right lane (left ear to right ear) at the exact moment each tile reaches the line.
 
 | Action | Hand (camera) | Keyboard | Touch |
 |---|---|---|---|
-| Choose a year | Raise 1 to 4 fingers, or move the hand up and down ("Hand height") | 1 to 4 | Tap a year |
-| Lock it in | Pinch and hold for 1 second | Enter | Tap the year again, or Lock in |
-| Repeat the sound | Open palm | R | Repeat sound |
-| Skip the round | Fist (hold 1 second) | N | Skip |
-| Change the dataset | Swipe left or right | Left and right arrows | Arrow buttons |
-| Start, play again | Pinch | Enter | Start game |
+| Pick a lane | Move your hand left or right | 1 to 4 | Lane buttons |
+| Hit the tile | Pinch | 1 to 4 | Tap the lane button |
+| Start, play again | Pinch | Enter | Start song |
+| Change the dataset (between songs) | Swipe left or right | Left and right arrows | Arrow buttons |
+| Stop the song | Hold a fist for 2 seconds | Escape | Stop |
 
-To use the camera, choose "Camera and hand gestures" under Controls (serve the folder with `python -m http.server 8000`, because browsers only allow the camera on localhost or https). The page says what will happen, asks for the camera, then runs a short spoken calibration. If the camera is refused or missing it switches to keyboard and touch by itself. The video is never recorded, stored or uploaded.
+To use the camera, choose "Camera and hand gestures" under Controls (serve the folder with `python3 -m http.server 8000`, because browsers only allow the camera on localhost or https). The page says what will happen, asks for the camera, then runs a short spoken calibration. If the camera is refused or missing it switches to keyboard and touch by itself. The video is never recorded, stored or uploaded.
 
-How the sound is made: a bigger value plays a higher and louder note, and a year with a bigger average plays a faster pulse.
+The "Relaxed timing" switch makes the tiles fall 1.5 times slower and the hit window 2.5 times wider. Game mode off hides the score and streak (free play).
 
 ### How to swap in real data
 
-Edit only `js/games/guess-year-data.js`. The steps are written at the top of that file. In short: replace each year's list of numbers with real values, then set `placeholder: false`. The numbers in the file today are made-up sample values, and the game says "sample data" aloud until you change that flag. The spoken fact after each answer is calculated from the numbers, so it updates by itself.
+Edit only `js/games/air-tiles-data.js`. The steps are written at the top of that file. In short: replace each year's list of numbers with real values, then set `placeholder: false`. The numbers in the file today are made-up sample values, and the game says "sample data" aloud until you change that flag. If a year has 12 numbers, the game treats them as months and names the month of the highest note at the end.
 
 ### How to use the hand engine in another game
 
     HandEngine.on('pinch', function (e) { if (e.down) { /* ... */ } });
-    HandEngine.on('fingers', function (e) { /* e.count is 0 to 4 */ });
+    HandEngine.on('move', function (e) { /* e.x and e.y are 0 to 1 */ });
     HandEngine.start();
 
 The full list of events is at the top of `js/hands.js`. The numbers that decide what counts as a pinch, fist or swipe are in the `TUNE` block there.

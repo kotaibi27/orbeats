@@ -3,14 +3,14 @@
 
 var play = {
   mode: true,                   // Game mode: score, timer and streaks
-  games: [true, true, true],    // which games are switched on (0 = Guess the Year, 1 = Air Tiles, 2 = Earth Simon)
+  games: [true, true],          // which games are switched on (0 = Air Tiles, 1 = Earth Simon)
   control: 'keyboard'           // 'camera', 'keyboard' or 'touch'
 };
 
 var CONTROL_NOTES = {
-  camera: 'Raise 1 to 4 fingers to choose, pinch and hold to lock in. Open palm repeats, fist skips, swipe changes the dataset. Keyboard and touch always work too.',
-  keyboard: 'Press 1 to 4 to choose, Enter to lock in. R repeats, N skips, left and right arrows change the dataset, Escape stops.',
-  touch: 'Tap a year to choose it, then tap it again or tap Lock in.'
+  camera: 'Move your hand into a lane and pinch to hit a tile. Pinch to start. Swipe changes the dataset between songs. Keyboard and touch always work too.',
+  keyboard: 'Press 1 to 4 to hit a lane, Enter to start, left and right arrows change the dataset, Escape stops.',
+  touch: 'Tap a lane button when its tile reaches the line.'
 };
 
 // A game script can define onPlayChange(what) to be told when something here changes.
@@ -30,7 +30,7 @@ document.getElementById('game-mode').addEventListener('orbeats:switch', function
   tellGame('mode');
 });
 
-// Game on/off switches (each has data-game="0", "1" or "2" in play.html)
+// Game on/off switches (each has data-game="0" or "1" in play.html)
 document.querySelectorAll('[data-game]').forEach(function (button) {
   button.addEventListener('orbeats:switch', function (e) {
     play.games[Number(button.getAttribute('data-game'))] = e.detail.on;

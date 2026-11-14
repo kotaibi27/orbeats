@@ -1,4 +1,4 @@
-// DATA FOR THE GAME "GUESS THE YEAR".
+// DATA FOR THE GAME "AIR TILES".
 // This is the ONLY file to edit when real NASA numbers are ready.
 //
 // !!! PLACEHOLDER DATA !!!
@@ -7,25 +7,27 @@
 // seasons) so the game can be built and tested. Every dataset marked  placeholder: true  is
 // announced in the game as "sample data".
 //
-// HOW TO SWAP IN REAL DATA
-// 1. For each year, replace the list of numbers with the real values (for example 12 monthly
-//    averages). Any unit works. The game scales the numbers by itself.
-//    Bigger number = higher and louder note. A year with a bigger average = faster pulse.
-// 2. Every year in one dataset should have the same amount of numbers.
-// 3. Change  placeholder: true  to  placeholder: false.  The game then stops saying "sample data".
-// 4. "title" is the name spoken and shown in the game. "svs" is the NASA SVS number, for reference.
-// 5. "thing" completes the spoken fact, for example: "night lights were about 12 percent brighter in 2021 than in 2014".
+// HOW THE GAME USES IT
+// Each game plays two years in a row, one falling tile per number (24 tiles for 12 numbers a year).
+// A bigger number makes a higher note and a tile further to the right:
+//   the lowest number in the dataset = far left lane, lowest note
+//   the highest number in the dataset = far right lane, highest note
 //
-// The catalog's Air Quality Model Runs (SVS 5533) cover only July to August 2024, so they cannot
-// be used for a guess-the-year round. Add a dataset here only if it spans several years.
+// HOW TO SWAP IN REAL DATA
+// 1. For each year, replace the list of numbers with the real values. Any unit works.
+//    The game scales the numbers by itself.
+// 2. Every year in one dataset should have the same amount of numbers. If there are 12, the game
+//    treats them as January to December and says the month of the highest note at the end.
+// 3. A dataset needs at least 2 years (the game plays two in a row).
+// 4. Change  placeholder: true  to  placeholder: false.  The game then stops saying "sample data".
+// 5. "title" is the name spoken and shown. "svs" is the NASA SVS number, for reference.
+//    "hint" is read aloud before the song.
 
-var GUESS_YEAR_DATA = [
+var AIR_TILES_DATA = [
   {
     svs: '5313',
     title: 'Change in Night Lights between 2012 and 2023',
     placeholder: true,
-    thing: 'night lights',
-    more: 'brighter', less: 'dimmer',
     hint: 'Higher and louder notes mean brighter lights at night.',
     years: {
       2012: [103.4, 103, 101.4, 100.3, 98.5, 97.9, 96.7, 97, 98.1, 100, 101.3, 102.6],
@@ -46,8 +48,6 @@ var GUESS_YEAR_DATA = [
     svs: '5011',
     title: 'Lightning Events Detected from the ISS, 2017 to 2023',
     placeholder: true,
-    thing: 'lightning flashes',
-    more: 'more frequent', less: 'less frequent',
     hint: 'Higher and louder notes mean more lightning. The year rises and falls with the seasons.',
     years: {
       2017: [22, 26, 39, 53, 70, 85, 89, 83, 73, 54, 39, 28],
