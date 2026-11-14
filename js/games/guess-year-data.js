@@ -13,7 +13,7 @@
 //    Bigger number = higher and louder note. A year with a bigger average = faster pulse.
 // 2. Every year in one dataset should have the same amount of numbers.
 // 3. Change  placeholder: true  to  placeholder: false.  The game then stops saying "sample data".
-// 4. "svs" must match an entry in the CATALOG list in js/shared.js (the title is read from there).
+// 4. "title" is the name spoken and shown in the game. "svs" is the NASA SVS number, for reference.
 // 5. "thing" completes the spoken fact, for example: "night lights were about 12 percent brighter in 2021 than in 2014".
 //
 // The catalog's Air Quality Model Runs (SVS 5533) cover only July to August 2024, so they cannot
@@ -22,6 +22,7 @@
 var GUESS_YEAR_DATA = [
   {
     svs: '5313',
+    title: 'Change in Night Lights between 2012 and 2023',
     placeholder: true,
     thing: 'night lights',
     more: 'brighter', less: 'dimmer',
@@ -43,6 +44,7 @@ var GUESS_YEAR_DATA = [
   },
   {
     svs: '5011',
+    title: 'Lightning Events Detected from the ISS, 2017 to 2023',
     placeholder: true,
     thing: 'lightning flashes',
     more: 'more frequent', less: 'less frequent',

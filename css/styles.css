@@ -98,3 +98,27 @@ input[type=range]{accent-color:#7FC8F8;width:100%;height:44px;cursor:pointer;bac
 .hc .zone{border-color:#FFF}
 @media (prefers-reduced-motion:reduce){*:not(.beat),*::before,*::after{animation:none!important;transition:none!important}}
 [hidden]{display:none!important}
+
+/* ---------- Play tab: camera panel and Guess the Year ---------- */
+.camera-box{display:flex;flex-wrap:wrap;gap:1.5em;align-items:flex-start;margin-top:2em;padding-top:1.5em;border-top:1px solid var(--line)}
+.camera-box canvas{width:240px;height:180px;border:1px solid var(--line);border-radius:6px;background:var(--panel)}
+.camera-side{flex:1 1 20em;display:flex;flex-direction:column;gap:.8em}
+.game-row{display:flex;flex-wrap:wrap;align-items:center;gap:.8em 1em}
+.game-stage{border-top:1px solid var(--line);padding-top:1.5em;min-width:0}
+.game-stage:focus{outline:none}
+.game-side{border-top:1px solid var(--line);padding-top:1.5em}
+.game-caption{margin-top:.8em;min-height:4.5em;font-size:1.1em;color:var(--text);border-left:2px solid var(--accent);padding-left:1em}
+.gy-options{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1em;margin-top:1.5em}
+.opt{flex-direction:column;gap:.2em;min-height:7em;border-radius:12px;padding:.8em}
+.opt-key{font-size:.8em;color:var(--muted)}
+.opt-year{font-family:'Newsreader',Georgia,serif;font-size:2em;line-height:1.1}
+.opt-note{font-size:.8em;min-height:1.3em;color:var(--accent)}
+.opt[aria-pressed=true]{border:2px solid var(--accent);background:var(--panel2)}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+progress{width:100%;height:6px;margin:.8em 0 1.2em;accent-color:#7FC8F8}
+.game-stats,.game-keys{display:grid;grid-template-columns:max-content 1fr;gap:.5em 1.2em;margin:0}
+.game-stats dd{margin:0;font-size:1.3em;font-variant-numeric:tabular-nums}
+.game-stats dt,.game-keys dd{color:var(--muted)}
+.game-keys dd{margin:0}
+.game-keys{font-size:.9em;margin-top:.8em}
+@media (max-width:720px){.gy-options{grid-template-columns:repeat(2,minmax(0,1fr))}}

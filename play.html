@@ -7,7 +7,11 @@
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"><link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,300;6..72,400&amp;family=Inter:wght@300;400;500&amp;display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/styles.css">
 <script src="js/app.js" defer></script>
+<script src="js/voice.js" defer></script>
+<script src="js/hands.js" defer></script>
 <script src="js/play.js" defer></script>
+<script src="js/games/guess-year-data.js" defer></script>
+<script src="js/games/guess-year.js" defer></script>
 </head>
 <body>
 <div class="app" id="app">
@@ -30,7 +34,7 @@
 <div style="display: flex; flex-direction: column; gap: .9em">
 <p class="label">02 · Play</p>
 <h1 style="font-size: 3.4em">Play</h1>
-<p class="muted" style="font-size: 1.1em">[One-line subtitle placeholder]</p>
+<p class="muted" style="font-size: 1.1em">Games you can play by ear, with your hand, the keyboard or touch.</p>
 </div>
 <div style="display: flex; align-items: center; gap: 1.2em">
 <div style="text-align: right"><p>Game mode</p><p id="mode-hint" class="muted" style="font-size: .85em">Score, timer and streaks</p></div>
@@ -45,15 +49,15 @@
 <div class="thumb" style="aspect-ratio: 16 / 9">[Image placeholder]</div>
 <div style="display: flex; justify-content: space-between; align-items: center; gap: .8em">
 <h3 style="font-size: 1.6em">Guess the Year</h3>
-<button class="switch" role="switch" aria-checked="true" aria-label="Guess the Year enabled"><span class="track" aria-hidden="true"></span><span class="state">On</span></button>
+<button class="switch" role="switch" aria-checked="true" aria-label="Guess the Year enabled" data-game="0"><span class="track" aria-hidden="true"></span><span class="state">On</span></button>
 </div>
-<p class="muted" style="font-size: .9em">[One-line description placeholder]</p>
+<p class="muted" style="font-size: .9em">Hear one year of NASA data and guess which year it is.</p>
 </article>
 <article style="display: flex; flex-direction: column; gap: 1em; padding-top: 1.2em; border-top: 1px solid var(--line)">
 <div class="thumb" style="aspect-ratio: 16 / 9">[Image placeholder]</div>
 <div style="display: flex; justify-content: space-between; align-items: center; gap: .8em">
 <h3 style="font-size: 1.6em">Air Tiles</h3>
-<button class="switch" role="switch" aria-checked="true" aria-label="Air Tiles enabled"><span class="track" aria-hidden="true"></span><span class="state">On</span></button>
+<button class="switch" role="switch" aria-checked="true" aria-label="Air Tiles enabled" data-game="1"><span class="track" aria-hidden="true"></span><span class="state">On</span></button>
 </div>
 <p class="muted" style="font-size: .9em">[One-line description placeholder]</p>
 </article>
@@ -61,7 +65,7 @@
 <div class="thumb" style="aspect-ratio: 16 / 9">[Image placeholder]</div>
 <div style="display: flex; justify-content: space-between; align-items: center; gap: .8em">
 <h3 style="font-size: 1.6em">Earth Simon</h3>
-<button class="switch" role="switch" aria-checked="true" aria-label="Earth Simon enabled"><span class="track" aria-hidden="true"></span><span class="state">On</span></button>
+<button class="switch" role="switch" aria-checked="true" aria-label="Earth Simon enabled" data-game="2"><span class="track" aria-hidden="true"></span><span class="state">On</span></button>
 </div>
 <p class="muted" style="font-size: .9em">[One-line description placeholder]</p>
 </article>
@@ -74,9 +78,81 @@
 <p id="ctrl-note" class="muted" style="font-size: .85em" aria-live="polite">[Keyboard instructions placeholder]</p>
 </section>
 
+<!-- Camera panel: shown only while "Camera and hand gestures" is chosen. Built by js/hands.js and js/games/guess-year.js -->
+<section id="camera-box" class="camera-box" aria-label="Camera" hidden>
+<canvas id="hand-preview" width="240" height="180" aria-hidden="true"></canvas>
+<div class="camera-side">
+<p id="camera-note" role="status">Camera is off.</p>
+<p class="muted" style="font-size: .85em">Camera is on, nothing is recorded. The picture never leaves this device.</p>
+<div class="game-row">
+<button class="btn" id="use-keyboard">Use keyboard or touch instead</button>
+<button class="btn" id="calibrate">Calibrate again</button>
+<button class="switch" id="preview-switch" role="switch" aria-checked="true" aria-label="Camera preview"><span class="track" aria-hidden="true"></span><span class="state">On</span><span>Camera preview</span></button>
+</div>
+<div class="game-row">
+<span id="hs-h" class="muted" style="font-size: .9em">Choose with</span>
+<div class="seg" role="radiogroup" aria-labelledby="hs-h" id="hand-style">
+<label><input type="radio" name="hand-style" value="fingers" checked><span>Fingers (1 to 4)</span></label>
+<label><input type="radio" name="hand-style" value="zones"><span>Hand height</span></label>
+</div>
+</div>
+</div>
+</section>
+
+<!-- GAME 1: Guess the Year. The logic is in js/games/guess-year.js, the data in js/games/guess-year-data.js -->
 <div class="g-main" style="margin-top: 2em">
-<section aria-label="Game stage" id="game-stage" class="zone zone-c" style="min-height: 34em">[Game stage: placeholder]</section>
-<aside aria-label="Score and feedback" class="zone" style="min-height: 34em">[Score and feedback area]</aside>
+<section aria-labelledby="gy-h" class="game-stage" id="gy-stage" tabindex="-1">
+<h2 id="gy-h" style="font-size: 2em">Guess the Year</h2>
+<p id="gy-off" class="muted" hidden>Guess the Year is switched off. Turn it on with its switch above.</p>
+<div id="gy-body">
+<div class="game-row" style="justify-content: space-between">
+<p><span class="label">Dataset</span><br><span id="gy-dataset" class="serif" style="font-size: 1.25em"></span></p>
+<div class="game-row">
+<button class="btn btn-icon" id="gy-prev" aria-label="Previous dataset (left arrow)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"></path></svg></button>
+<button class="btn btn-icon" id="gy-next" aria-label="Next dataset (right arrow)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></button>
+</div>
+</div>
+<p id="gy-state" class="serif" style="font-size: 1.6em; margin-top: 1em" aria-hidden="true">Ready</p>
+<!-- Everything the game says is also written here. Screen readers announce it (ARIA live region). -->
+<p id="game-caption" class="game-caption" aria-live="assertive">Press Start game. The game speaks everything aloud.</p>
+<div id="gy-options" class="gy-options" role="group" aria-label="Year options">
+<button class="btn opt" data-option="0" aria-pressed="false" disabled><span class="opt-key">1</span><span class="opt-year">–</span><span class="opt-note"></span></button>
+<button class="btn opt" data-option="1" aria-pressed="false" disabled><span class="opt-key">2</span><span class="opt-year">–</span><span class="opt-note"></span></button>
+<button class="btn opt" data-option="2" aria-pressed="false" disabled><span class="opt-key">3</span><span class="opt-year">–</span><span class="opt-note"></span></button>
+<button class="btn opt" data-option="3" aria-pressed="false" disabled><span class="opt-key">4</span><span class="opt-year">–</span><span class="opt-note"></span></button>
+</div>
+<div class="game-row" style="margin-top: 1.5em">
+<button class="btn btn-primary" id="gy-start">Start game</button>
+<button class="btn" id="gy-confirm" disabled>Lock in (Enter)</button>
+<button class="btn" id="gy-repeat" disabled>Repeat sound (R)</button>
+<button class="btn" id="gy-skip" disabled>Skip (N)</button>
+</div>
+</div>
+</section>
+
+<aside aria-label="Score and progress" class="game-side">
+<p class="label">Progress</p>
+<p id="gy-round" style="font-size: 1.3em" role="status">Not started</p>
+<progress id="gy-progress" max="5" value="0" aria-label="Rounds played"></progress>
+<div id="gy-scorebox">
+<dl class="game-stats">
+<dt>Score</dt><dd id="gy-score">0 of 5</dd>
+<dt>In a row</dt><dd id="gy-streak">0</dd>
+<dt>Time left</dt><dd id="gy-timer">–</dd>
+</dl>
+</div>
+<p id="gy-free" class="muted" hidden>Free play: no score, timer or streaks.</p>
+<button class="switch" id="relaxed-switch" role="switch" aria-checked="false" aria-label="Relaxed timing" style="margin-top: 1.5em"><span class="track" aria-hidden="true"></span><span class="state">Off</span><span>Relaxed timing (3× more time)</span></button>
+<p class="label" style="margin-top: 2em">Shortcuts</p>
+<dl class="game-keys">
+<dt>1 to 4</dt><dd>Choose a year</dd>
+<dt>Enter</dt><dd>Lock in, start, play again</dd>
+<dt>R</dt><dd>Repeat the sound</dd>
+<dt>N</dt><dd>Skip the round</dd>
+<dt>← →</dt><dd>Change the dataset</dd>
+<dt>Esc</dt><dd>Stop the game</dd>
+</dl>
+</aside>
 </div>
 </div>
 </main>
@@ -91,9 +167,9 @@
 <button class="btn btn-primary btn-icon" aria-label="Pause" id="np-play"><span class="ic-pause"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="6" y="4.5" width="4.5" height="15" rx="1"></rect><rect x="13.5" y="4.5" width="4.5" height="15" rx="1"></rect></svg></span><span class="ic-play" hidden><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4.5v15l12.5-7.5z"></path></svg></span></button>
 <div style="min-width: 14em; max-width: 26em">
 <p class="label" style="font-size: .68em">Now playing</p>
-<p class="np-title">Air Tiles · [track placeholder]</p>
+<p class="np-title">Guess the Year</p>
 </div>
-<p id="np-cap" class="np-cap" aria-live="polite">Caption · <span>[What this sound represents placeholder]</span></p>
+<p id="np-cap" class="np-cap" aria-live="polite">Caption · <span>Higher and louder notes mean a bigger value. A faster pulse means more activity.</span></p>
 <p id="np-audio-off" class="np-cap" hidden>Audio is off. Captions only.</p>
 <div class="vol"><label for="np-vol" class="sr">Volume</label><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z"></path><path d="M16.5 8.5a5 5 0 0 1 0 7"></path><path d="M19 6a8.5 8.5 0 0 1 0 12"></path></svg><input id="np-vol" type="range" min="0" max="100" value="70"></div>
 <div><span class="sr">Output level: [level placeholder]</span><div class="meter" aria-hidden="true"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></div>

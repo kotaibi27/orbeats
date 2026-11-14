@@ -1,18 +1,49 @@
-// Play tab: game mode hint and controls note.
-(function () {
-  const mode = document.getElementById('game-mode');
-  const hint = document.getElementById('mode-hint');
-  mode.addEventListener('orbeats:switch', function (e) {
-    hint.textContent = e.detail.on ? 'Score, timer and streaks' : 'Free play';
-  });
+// Play tab: game switches, game mode and the controls choice.
+// The current choices are kept in the "play" object so the games can read them.
 
-  const notes = {
-    camera: '[Camera status placeholder] · Keyboard and touch always work as a fallback.',
-    keyboard: '[Keyboard instructions placeholder]',
-    touch: '[Touch instructions placeholder]'
-  };
-  const note = document.getElementById('ctrl-note');
-  document.querySelectorAll('input[name="ctrl"]').forEach(function (r) {
-    r.addEventListener('change', function () { note.textContent = notes[r.value]; });
+var play = {
+  mode: true,                   // Game mode: score, timer and streaks
+  games: [true, true, true],    // which games are switched on (0 = Guess the Year, 1 = Air Tiles, 2 = Earth Simon)
+  control: 'keyboard'           // 'camera', 'keyboard' or 'touch'
+};
+
+var CONTROL_NOTES = {
+  camera: 'Raise 1 to 4 fingers to choose, pinch and hold to lock in. Open palm repeats, fist skips, swipe changes the dataset. Keyboard and touch always work too.',
+  keyboard: 'Press 1 to 4 to choose, Enter to lock in. R repeats, N skips, left and right arrows change the dataset, Escape stops.',
+  touch: 'Tap a year to choose it, then tap it again or tap Lock in.'
+};
+
+// A game script can define onPlayChange(what) to be told when something here changes.
+function tellGame(what) { if (typeof onPlayChange === 'function') onPlayChange(what); }
+
+// Choose a control from code (for example when the camera is refused).
+function setControl(name) {
+  play.control = name;
+  document.querySelector('input[name="ctrl"][value="' + name + '"]').checked = true;
+  document.getElementById('ctrl-note').textContent = CONTROL_NOTES[name];
+}
+
+// Game mode switch. js/app.js flips the switch and sends the "orbeats:switch" event.
+document.getElementById('game-mode').addEventListener('orbeats:switch', function (e) {
+  play.mode = e.detail.on;
+  document.getElementById('mode-hint').textContent = play.mode ? 'Score, timer and streaks' : 'Free play';
+  tellGame('mode');
+});
+
+// Game on/off switches (each has data-game="0", "1" or "2" in play.html)
+document.querySelectorAll('[data-game]').forEach(function (button) {
+  button.addEventListener('orbeats:switch', function (e) {
+    play.games[Number(button.getAttribute('data-game'))] = e.detail.on;
+    tellGame('game');
   });
-})();
+});
+
+// Controls choice
+document.querySelectorAll('input[name="ctrl"]').forEach(function (radio) {
+  radio.addEventListener('change', function () {
+    setControl(radio.value);
+    tellGame('control');
+  });
+});
+
+setControl('keyboard');

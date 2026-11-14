@@ -3,7 +3,7 @@
 // It can be played with a hand in front of the camera (no screen needed), with the keyboard,
 // or by touch. Everything is spoken aloud and shown as captions.
 //
-// Needs: js/shared.js, js/voice.js, js/hands.js, js/play.js and js/games/guess-year-data.js.
+// Needs: js/app.js, js/voice.js, js/hands.js, js/play.js and js/games/guess-year-data.js.
 //
 // The game is a small "state machine". game.state is always one of:
 //   'idle'       waiting to start
@@ -37,11 +37,7 @@ var game = {
 
 function $(id) { return document.getElementById(id); }
 
-function datasetTitle(index) {
-  var data = GUESS_YEAR_DATA[index];
-  for (var i = 0; i < CATALOG.length; i++) { if (CATALOG[i].svs === data.svs) return CATALOG[i].title; }
-  return 'Dataset ' + data.svs;
-}
+function datasetTitle(index) { return GUESS_YEAR_DATA[index].title; }
 
 function gameIsOn() { return play.games[0]; }   // the Guess the Year on/off switch on this page
 function inRound() { return game.state === 'listening' || game.state === 'choosing'; }
@@ -205,7 +201,8 @@ async function introduceDataset(my) {
   var data = GUESS_YEAR_DATA[game.dataset];
   var years = Object.keys(data.years).map(Number);
   var first = years[0], last = years[years.length - 1];
-  setNowPlayingTitle('Guess the Year · ' + datasetTitle(game.dataset));
+  ORBEATS.setNowPlaying('Guess the Year · ' + datasetTitle(game.dataset), data.hint);
+  if (ORBEATS.music.isOn()) ORBEATS.music.mute();   // the home page music must not play over the game
   await say('Dataset: ' + datasetTitle(game.dataset) + '. ' + (data.placeholder ? 'This is sample data, not real measurements yet. ' : '') + data.hint);
   if (stale(my)) return;
   await say('The earliest year, ' + first + ', sounds like this.');
@@ -437,8 +434,7 @@ async function useCamera() {
 function useKeyboard(quiet) {
   HandEngine.stop();
   $('camera-box').hidden = true;
-  play.control = 'keyboard';
-  drawControls();
+  setControl('keyboard');
   if (!quiet) say('Using keyboard and touch. Press 1 to 4 to choose and Enter to lock in.');
 }
 
@@ -468,13 +464,9 @@ $('gy-options').addEventListener('click', function (event) {
   if (button) choose(Number(button.getAttribute('data-option')));
 });
 
+// js/app.js flips every switch on the page and sends "orbeats:switch". We only react to it.
 function flipSwitch(id, apply) {
-  $(id).addEventListener('click', function () {
-    var on = this.getAttribute('aria-checked') !== 'true';
-    this.setAttribute('aria-checked', on ? 'true' : 'false');
-    this.querySelector('.state').textContent = on ? 'On' : 'Off';
-    apply(on);
-  });
+  $(id).addEventListener('orbeats:switch', function (e) { apply(e.detail.on); });
 }
 flipSwitch('relaxed-switch', function (on) { game.relaxed = on; HandEngine.relaxed = on; say('Relaxed timing ' + (on ? 'on. You have three times more time.' : 'off.')); });
 flipSwitch('preview-switch', function (on) { HandEngine.showPreview = on; $('hand-preview').hidden = !on; });
@@ -503,9 +495,6 @@ document.addEventListener('keydown', function (event) {
   event.preventDefault();
 });
 
-$('gy-prev').innerHTML = ICONS.arrowLeft;
-$('gy-next').innerHTML = ICONS.arrowRight;
-
 // Show the first state. Captions follow the Captions button in the accessibility bar.
-$('game-caption').classList.toggle('sr', !settings.cc);
+applySettings();
 drawGame();
